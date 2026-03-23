@@ -37,7 +37,7 @@ export function FilterPanel({
               <button
                 key={format}
                 type="button"
-                className={formatFilter === format ? 'chip glow' : 'chip'}
+                className={formatFilter === format ? "chip glow" : "chip"}
                 onClick={() => onFormatChange(format)}
               >
                 {format}
@@ -53,7 +53,7 @@ export function FilterPanel({
               <button
                 key={theme}
                 type="button"
-                className={themeFilter === theme ? 'chip glow' : 'chip'}
+                className={themeFilter === theme ? "chip glow" : "chip"}
                 onClick={() => onThemeChange(theme)}
               >
                 {theme}

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom"
 
 export type EventPreview = {
   id: string
@@ -25,9 +25,9 @@ export type EventPreview = {
   subscriberCount: number
   similar: string[]
   mapHint: string
-  visibility: 'everyone' | 'attendees'
+  visibility: "everyone" | "attendees"
   promoCodes: number
-  notificationPref: 'all' | 'limit'
+  notificationPref: "all" | "limit"
   isHighlighted?: boolean
 }
 
@@ -35,35 +35,35 @@ type EventCardProps = {
   event: EventPreview
 }
 
-const VIEWER_PLACEHOLDER = 'HIDDEN'
+const VIEWER_PLACEHOLDER = "HIDDEN"
 
 export function EventCard({ event }: EventCardProps) {
-  const formattedDate = new Intl.DateTimeFormat('uk-UA', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+  const formattedDate = new Intl.DateTimeFormat("uk-UA", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   }).format(new Date(event.datetime))
 
   const formattedPrice = event.isFree
-    ? 'Free with RSVP'
-    : `${event.price.toLocaleString('en-US', {
-        style: 'currency',
-        currency: event.currency,
-      })}`
+    ? "Free with RSVP"
+    : `${event.price.toLocaleString("en-US", {
+      style: "currency",
+      currency: event.currency,
+    })}`
 
   const attendees = event.attendees.slice(0, 4)
 
   return (
-    <article className={`event-card ${event.isHighlighted ? 'highlighted' : ''}`}>
+    <article className={`event-card ${event.isHighlighted ? "highlighted" : ""}`}>
       <div className="badge-row">
         <span>{event.format}</span>
         <span>{event.theme}</span>
         <span>
-          {event.visibility === 'everyone'
-            ? 'Visitor list open'
-            : 'Visible to attendees only'}
+          {event.visibility === "everyone"
+            ? "Visitor list open"
+            : "Visible to attendees only"}
         </span>
       </div>
 
@@ -131,7 +131,7 @@ export function EventCard({ event }: EventCardProps) {
         <div className="attendee-info">
           <strong>{event.attendees.length} attendees already confirmed</strong>
           <span>
-            Visibility: {event.visibility === 'everyone' ? 'everyone' : 'attendees only'}
+            Visibility: {event.visibility === "everyone" ? "everyone" : "attendees only"}
           </span>
         </div>
       </div>
@@ -147,7 +147,7 @@ export function EventCard({ event }: EventCardProps) {
       <div className="similar-section">
         <div>
           <span>Comments: {event.commentCount}</span>
-          <span>Promos: {event.promoCodes > 0 ? 'active' : 'none'}</span>
+          <span>Promos: {event.promoCodes > 0 ? "active" : "none"}</span>
         </div>
         <div className="similar-tags">
           {event.similar.map((tag) => (
@@ -161,8 +161,8 @@ export function EventCard({ event }: EventCardProps) {
 
 function initials(name: string) {
   return name
-    .split(' ')
-    .map((part) => part[0]?.toUpperCase() ?? '')
-    .join('')
+    .split(" ")
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("")
     .slice(0, 2)
 }

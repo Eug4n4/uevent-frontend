@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink } from "react-router-dom"
 
 const IceLogo = () => (
   <svg
@@ -59,19 +59,8 @@ const IceLogo = () => (
   </svg>
 )
 
-type HeaderProps = {
-  categories: string[]
-  activeCategory: string
-  onSelect: (category: string) => void
-  showCategories?: boolean
-}
 
-export function Header({
-  categories,
-  activeCategory,
-  onSelect,
-  showCategories = true,
-}: HeaderProps) {
+export function Header() {
   return (
     <header className="hero-header">
       <div className="brand">
@@ -85,26 +74,14 @@ export function Header({
       <nav>
         <NavLink
           to="/"
-          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
         >
           Home
         </NavLink>
         {/* навигация чисто для вида, позже заменим на реальные ссылки */}
-        {showCategories &&
-          categories.map((category) => (
-            <button
-              key={category}
-              type="button"
-              aria-current={category === activeCategory}
-              className="nav-chip"
-              onClick={() => onSelect(category)}
-            >
-              {category}
-            </button>
-          ))}
         <NavLink
           to="/auth"
-          className={({ isActive }) => `nav-cta ${isActive ? 'active' : ''}`}
+          className={({ isActive }) => `nav-cta ${isActive ? "active" : ""}`}
         >
           Login / Register
         </NavLink>

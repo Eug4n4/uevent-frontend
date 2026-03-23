@@ -1,4 +1,4 @@
-import { EventCard, type EventPreview } from '../EventCard'
+import { EventCard, type EventPreview } from "../EventCard"
 
 type EventGridProps = {
   events: EventPreview[]

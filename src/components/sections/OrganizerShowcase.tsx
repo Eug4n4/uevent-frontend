@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom"
 
 type OrganizerSpotlight = {
   name: string
@@ -38,9 +38,9 @@ export function OrganizerShowcase({ spotlights }: OrganizerShowcaseProps) {
             <Link to={spotlight.path} className="pill-btn link-reset">
               {spotlight.entrypoint}
             </Link>
-         </article>
-       ))}
-     </div>
-   </section>
- )
+          </article>
+        ))}
+      </div>
+    </section>
+  )
 }

@@ -1,25 +1,23 @@
-import { AuthCard } from '../AuthCard'
+import { AuthCard } from "../AuthCard"
 
 type AuthSectionProps = {
-  mode: 'login' | 'register'
-  onModeChange: (mode: 'login' | 'register') => void
-  featuredCategory: string
+  mode: "login" | "register"
+  onModeChange: (mode: "login" | "register") => void
 }
 
 const dashboardHighlights = [
-  'Event reminders plus ticket emails',
-  'Toggle “show my name” in attendee lists',
-  'Dedicated tabs for tickets, events, and companies',
+  "Event reminders plus ticket emails",
+  "Toggle “show my name” in attendee lists",
+  "Dedicated tabs for tickets, events, and companies",
 ]
 
 export function AuthSection({
   mode,
   onModeChange,
-  featuredCategory,
 }: AuthSectionProps) {
   return (
     <section className="auth-anchor">
-      <AuthCard mode={mode} onModeChange={onModeChange} featuredCategory={featuredCategory} />
+      <AuthCard mode={mode} onModeChange={onModeChange} />
 
       <aside className="reminder-panel">
         <p className="eyebrow">Inside the dashboard</p>

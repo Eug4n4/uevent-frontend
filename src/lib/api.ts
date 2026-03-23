@@ -1,3 +1,33 @@
+import axios from "axios";
+import { API_PREFIX } from "./constants";
+
+
+
+const api = axios.create({
+  adapter: "fetch",
+  withCredentials: true,
+  baseURL: `${import.meta.env.VITE_API_URL}/${API_PREFIX}`
+})
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (
+      error.response?.status === 401 &&
+            originalRequest.url !== "account/refresh"
+    ) {
+      try {
+        await api.post("account/refresh");
+        return api.request(originalRequest);
+      } catch (err) {
+        return Promise.reject(err);
+      }
+    }
+    return Promise.reject(error);
+  },
+);
+
 // эти типы пусть с бэка сверят со своим swagger
 export type RegistrationPayload = {
   email: string
@@ -17,11 +47,10 @@ export type ProfileAttributes = {
   created_at: string
 }
 
-const API_PREFIX = '/uevent/v1' // базовая префиксация, докер потом подменит env
 
 type JsonApiPayload<T> = {
   data: {
-    type: 'account'
+    type: "account"
     attributes: T
   }
 }
@@ -32,10 +61,10 @@ async function request<TResponse>(
 ): Promise<TResponse | null> {
   // простейший фетч, дальше подключим react-query/rtk когда появится прод бэк
   const response = await fetch(`${API_PREFIX}${path}`, {
-    method: 'POST',
-    credentials: 'include',
+    method: "POST",
+    credentials: "include",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
   })
@@ -60,9 +89,9 @@ async function request<TResponse>(
 }
 
 export async function registerAccount(payload: RegistrationPayload) {
-  await request('/account/registration', {
+  await request("/account/registration", {
     data: {
-      type: 'account',
+      type: "account",
       attributes: payload,
     },
   })
@@ -72,17 +101,17 @@ export async function loginAccount(
   payload: LoginPayload,
 ): Promise<ProfileAttributes> {
   const json = await request<{ data: { type: string; attributes: ProfileAttributes } }>(
-    '/account/login',
+    "/account/login",
     {
       data: {
-        type: 'account',
+        type: "account",
         attributes: payload,
       },
     },
   )
 
   if (!json?.data?.attributes) {
-    throw new Error('Unexpected response structure from login endpoint')
+    throw new Error("Unexpected response structure from login endpoint")
   }
 
   return json.data.attributes
