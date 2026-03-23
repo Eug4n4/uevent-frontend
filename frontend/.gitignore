@@ -9,7 +9,8 @@ lerna-debug.log*
 
 node_modules
 dist
-postgres
+dist-ssr
+*.local
 
 # Editor directories and files
 .vscode/*
@@ -21,12 +22,3 @@ postgres
 *.njsproj
 *.sln
 *.sw?
-
-.env
-.env.local
-.env.development
-.env.production
-.env.*.local
-
-.*.swp
-.*.swo

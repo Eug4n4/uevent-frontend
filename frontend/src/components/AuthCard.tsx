@@ -184,29 +184,35 @@ export function AuthCard({
           </label>
         )}
 
-        {feedback.status !== 'idle' && (
-          <p
-            className={`feedback ${feedback.status === 'error' ? 'error' : 'success'}`}
-          >
-            {feedback.message}
-          </p>
-        )}
-
-        <button
-          className="primary-btn"
-          type="submit"
-          disabled={!canSubmit || loading}
+      {feedback.status !== 'idle' && (
+        <p
+          className={`feedback ${feedback.status === 'error' ? 'error' : 'success'}`}
         >
-          {loading
-            ? 'Please wait...'
-            : mode === 'login'
-              ? 'Log in and continue'
-              : 'Register account'}
-        </button>
-      </form>
+          {feedback.message}
+        </p>
+      )}
 
-      {profile && (
-        <div className="profile-preview">
+      <button
+        className="primary-btn"
+        type="submit"
+        disabled={!canSubmit || loading}
+      >
+        {loading
+          ? 'Please wait...'
+          : mode === 'login'
+            ? 'Log in and continue'
+            : 'Register account'}
+      </button>
+      <div className="divider">
+        <span>or</span>
+      </div>
+      <button type="button" className="pill-btn google-btn">
+        Continue with Google
+      </button>
+    </form>
+
+    {profile && (
+      <div className="profile-preview">
           <p>Session ready</p>
           <div className="profile-details">
             <img
