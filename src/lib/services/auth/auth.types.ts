@@ -1,9 +1,9 @@
 import z from "zod";
 
 
-const LoginAttributes = z.object({
-  email: z.email(),
-  password: z.string()
+export const LoginAttributes = z.object({
+  email: z.email("Email is invalid").trim().min(1),
+  password: z.string().trim().min(6, "Password must be at least of length 6")
 })
 
 const LoginData = z.object({
@@ -11,8 +11,8 @@ const LoginData = z.object({
   attributes: LoginAttributes
 }) 
 
-const RegisterAttributes = LoginAttributes.extend({
-  username: z.string()
+export const RegisterAttributes = LoginAttributes.extend({
+  username: z.string().min(3, {message: "Username must be at least of length 3"})
 })
 
 const RegisterData = z.object({
@@ -33,3 +33,4 @@ export type LoginDetails = z.infer<typeof LoginAttributes>
 
 export type RegisterDto = z.infer<typeof RegisterSchema>
 export type RegisterDetails = z.infer<typeof RegisterAttributes>
+export type AuthDetails = LoginDetails & Partial<RegisterDetails>
