@@ -3,7 +3,7 @@ import { API_PREFIX } from "./constants";
 
 
 
-const api = axios.create({
+export const api = axios.create({
   adapter: "fetch",
   withCredentials: true,
   baseURL: `${import.meta.env.VITE_API_URL}/${API_PREFIX}`
