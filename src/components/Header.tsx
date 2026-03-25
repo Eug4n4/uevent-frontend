@@ -76,21 +76,20 @@ export function Header() {
       </div>
 
       <nav>
+        
+        <NavLink
+          to="/"
+          className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+        >
+          Home
+        </NavLink>
         {!isAuthenticated ? (
-          <>
-            <NavLink
-              to="/"
-              className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
-            >
-              Home
-            </NavLink>
-            <NavLink
-              to="/auth"
-              className={({ isActive }) => `nav-cta ${isActive ? "active" : ""}`}
-            >
-              Login / Register
-            </NavLink>
-          </>
+          <NavLink
+            to="/auth"
+            className={({ isActive }) => `nav-cta ${isActive ? "active" : ""}`}
+          >
+            Login / Register
+          </NavLink>
         ) : <UserIcon />}
         
       </nav>

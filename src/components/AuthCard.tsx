@@ -26,23 +26,15 @@ export function AuthCard({
 }: AuthCardProps) {
   const dispatch = useDispatch()
   const resolver = useMemo(() => zodResolver(mode === "login" ? LoginAttributes : RegisterAttributes), [mode])
-  const { register, handleSubmit, formState: { errors, isSubmitting }, watch } = useForm<AuthDetails>({ resolver, mode: "all" })
+  const { register, handleSubmit, formState: { errors, isSubmitting, isValid }, reset } = useForm<AuthDetails>({ resolver, mode: "all" })
 
   const [feedback, setFeedback] = useState<FeedbackState>({ status: "idle" })
   const [showNameOnLists, setShowNameOnLists] = useState(false)
-  const formValues = watch()
-
-  const canSubmit = useMemo(() => {
-    if (!formValues.email || !formValues.password || (mode === "register" && !formValues.username)) {
-      return false;
-    }
-    return true
-  }, [mode, formValues])
 
   const onSubmit = async (data: AuthDetails, event) => {
     event.preventDefault()
 
-    if (!canSubmit) {
+    if (!isValid) {
       return;
     }
     if (mode === "register") {
@@ -56,6 +48,7 @@ export function AuthCard({
     } else {
       const response = await AuthService.loginWithPassword(data)
       dispatch(loginSuccess(response))
+      reset()
       setFeedback({
         status: "success",
         message: `Welcome back, ${JSON.stringify(response)}!`,
@@ -156,6 +149,7 @@ export function AuthCard({
         <button
           className="primary-btn"
           type="submit"
+          disabled={!isValid}
         >
           {isSubmitting
             ? "Please wait..."

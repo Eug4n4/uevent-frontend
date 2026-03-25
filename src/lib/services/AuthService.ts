@@ -1,3 +1,4 @@
+import axios from "axios";
 import { api } from "../api";
 import type { AccountAttributes, AccountRelationships } from "./types/account.types";
 import type { AuthResponse, LoginDetails, LoginDto, RegisterDetails, RegisterDto } from "./types/auth.types";
@@ -35,6 +36,10 @@ export class AuthService {
 
   static async loginWithGoogle(code: string) {
 
+  }
+
+  static async refresh(signal: AbortSignal) {
+    await axios.post("account/refresh", undefined, { baseURL: api.defaults.baseURL, withCredentials: true, signal })
   }
     
 }
