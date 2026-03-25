@@ -19,8 +19,7 @@ export function OrganizerShowcase({ spotlights }: OrganizerShowcaseProps) {
         <p className="eyebrow">Companies</p>
         <h3>Organizers expand their reach through nICE</h3>
         <p>
-          This is where we demo company creation, news posts, and both event-creation flows
-          (with or without a poster).
+          This is where we demo company creation and both event-creation flows (with or without a poster).
         </p>
       </div>
       <div className="spotlight-grid">
