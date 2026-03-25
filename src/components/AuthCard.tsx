@@ -1,8 +1,11 @@
-import { LoginAttributes, RegisterAttributes, type AuthDetails, type RegisterDetails } from "@/lib/services/auth/auth.types"
-import { AuthService } from "@/lib/services/auth/AuthService"
+import { AuthService } from "@/lib/services/AuthService"
+import { LoginAttributes, RegisterAttributes, type AuthDetails, type RegisterDetails } from "@/lib/services/types/auth.types"
+import { loginSuccess } from "@/state/auth/auth.slice"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
+import { useDispatch } from "react-redux"
+import PasswordInput from "./inputs/PasswordInput"
 
 type AuthCardProps = {
   mode: "login" | "register"
@@ -21,8 +24,9 @@ export function AuthCard({
   mode,
   onModeChange,
 }: AuthCardProps) {
+  const dispatch = useDispatch()
   const resolver = useMemo(() => zodResolver(mode === "login" ? LoginAttributes : RegisterAttributes), [mode])
-  const { register, handleSubmit, formState: { errors, isLoading }, watch } = useForm<AuthDetails>({ resolver, mode: "all" })
+  const { register, handleSubmit, formState: { errors, isSubmitting }, watch } = useForm<AuthDetails>({ resolver, mode: "all" })
 
   const [feedback, setFeedback] = useState<FeedbackState>({ status: "idle" })
   const [showNameOnLists, setShowNameOnLists] = useState(false)
@@ -51,9 +55,10 @@ export function AuthCard({
       }).catch(console.error)
     } else {
       const response = await AuthService.loginWithPassword(data)
+      dispatch(loginSuccess(response))
       setFeedback({
         status: "success",
-        message: `Welcome back, ${JSON.stringify(response.data)}!`,
+        message: `Welcome back, ${JSON.stringify(response)}!`,
       })
     }
   }
@@ -106,11 +111,7 @@ export function AuthCard({
 
         <label className="field">
           <span>Password</span>
-          <input
-            type="password"
-            placeholder="••••••••••"
-            {...register("password")}
-          />
+          <PasswordInput placeholder="••••••••••" {...register("password")} />
           <small>{passwordHint}</small>
         </label>
 
@@ -156,7 +157,7 @@ export function AuthCard({
           className="primary-btn"
           type="submit"
         >
-          {isLoading
+          {isSubmitting
             ? "Please wait..."
             : mode === "login"
               ? "Log in and continue"

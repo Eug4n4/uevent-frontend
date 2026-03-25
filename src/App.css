@@ -307,7 +307,7 @@
   gap: 12px;
 }
 
-.filter-group > div {
+.filter-group>div {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -410,6 +410,21 @@
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+.password-input>input {
+  width: 100%;
+}
+
+.field>.password-input {
+  position: relative;
+}
+
+.password-input>svg {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
 }
 
 .field input:focus {
@@ -1170,10 +1185,12 @@
   gap: 12px;
   justify-content: flex-end;
 }
+
 @keyframes float {
   from {
     transform: translateY(0px);
   }
+
   to {
     transform: translateY(-14px);
   }
@@ -1184,6 +1201,7 @@
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -1191,20 +1209,24 @@
 }
 
 @keyframes cube-bob {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-6px);
   }
 }
 
 @keyframes foot-tap {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   40% {
     transform: translateY(2px);
   }
