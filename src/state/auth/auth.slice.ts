@@ -1,6 +1,12 @@
+import type { AuthResponse } from "@/lib/services/types/auth.types";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+type AuthState = {
+  isAuthenticated: boolean;
+  user: AuthResponse | null;
+}
+
+const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
 };
@@ -13,7 +19,7 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.user = action.payload
     },
-    logout: (state, action) => {
+    logout: (state) => {
       state.isAuthenticated = false;
       state.user = null;
     }

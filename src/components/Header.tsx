@@ -1,4 +1,7 @@
+import type { IRootState } from "@/state/store"
+import { useSelector } from "react-redux"
 import { NavLink } from "react-router-dom"
+import UserIcon from "./icons/UserIcon"
 
 const IceLogo = () => (
   <svg
@@ -61,6 +64,7 @@ const IceLogo = () => (
 
 
 export function Header() {
+  const { isAuthenticated } = useSelector((state: IRootState) => state.auth)
   return (
     <header className="hero-header">
       <div className="brand">
@@ -72,19 +76,23 @@ export function Header() {
       </div>
 
       <nav>
-        <NavLink
-          to="/"
-          className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
-        >
-          Home
-        </NavLink>
-        {/* навигация чисто для вида, позже заменим на реальные ссылки */}
-        <NavLink
-          to="/auth"
-          className={({ isActive }) => `nav-cta ${isActive ? "active" : ""}`}
-        >
-          Login / Register
-        </NavLink>
+        {!isAuthenticated ? (
+          <>
+            <NavLink
+              to="/"
+              className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+            >
+              Home
+            </NavLink>
+            <NavLink
+              to="/auth"
+              className={({ isActive }) => `nav-cta ${isActive ? "active" : ""}`}
+            >
+              Login / Register
+            </NavLink>
+          </>
+        ) : <UserIcon />}
+        
       </nav>
     </header>
   )
