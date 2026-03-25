@@ -64,13 +64,15 @@ type HeaderProps = {
   activeCategory: string
   onSelect: (category: string) => void
   showCategories?: boolean
+  loggedIn?: boolean
 }
 
 export function Header({
-  categories,
-  activeCategory,
-  onSelect,
-  showCategories = true,
+  categories: _categories,
+  activeCategory: _activeCategory,
+  onSelect: _onSelect,
+  showCategories: _showCategories = true,
+  loggedIn = false,
 }: HeaderProps) {
   return (
     <header className="hero-header">
@@ -89,25 +91,22 @@ export function Header({
         >
           Home
         </NavLink>
-        {/* навигация чисто для вида, позже заменим на реальные ссылки */}
-        {showCategories &&
-          categories.map((category) => (
-            <button
-              key={category}
-              type="button"
-              aria-current={category === activeCategory}
-              className="nav-chip"
-              onClick={() => onSelect(category)}
-            >
-              {category}
-            </button>
-          ))}
-        <NavLink
-          to="/auth"
-          className={({ isActive }) => `nav-cta ${isActive ? 'active' : ''}`}
-        >
-          Login / Register
-        </NavLink>
+        {/* категории убрали — останутся только home + auth/avatar */}
+        {loggedIn ? (
+          <NavLink
+            to="/profile"
+            className={({ isActive }) => `avatar-link ${isActive ? 'active' : ''}`}
+          >
+            <span className="avatar-circle">UE</span>
+          </NavLink>
+        ) : (
+          <NavLink
+            to="/auth"
+            className={({ isActive }) => `nav-cta ${isActive ? 'active' : ''}`}
+          >
+            Login / Register
+          </NavLink>
+        )}
       </nav>
     </header>
   )

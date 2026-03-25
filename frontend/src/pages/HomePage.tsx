@@ -69,7 +69,6 @@ const upcomingEvents: EventPreview[] = [
     mapHint: 'Random downtown venue',
     visibility: 'everyone',
     promoCodes: 1,
-    notificationPref: 'all',
     isHighlighted: true,
   },
   {
@@ -102,7 +101,6 @@ const upcomingEvents: EventPreview[] = [
     mapHint: 'Coworking floor B',
     visibility: 'attendees',
     promoCodes: 3,
-    notificationPref: 'all',
   },
   {
     id: 'ev-riverfest',
@@ -135,7 +133,6 @@ const upcomingEvents: EventPreview[] = [
     mapHint: 'Pier C stage',
     visibility: 'everyone',
     promoCodes: 0,
-    notificationPref: 'limit',
   },
 ]
 
@@ -152,7 +149,7 @@ const organizerSpotlights = [
     name: 'Nervous System Collective',
     mission: 'Focus on communication psychology for team leads.',
     metrics: ['4 cities', '70+ group sessions'],
-    entrypoint: 'Post a news item',
+    entrypoint: 'Open dashboard',
     path: '/admin',
   },
   {

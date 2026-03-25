@@ -23,14 +23,14 @@ export function AuthSection({
 
       <aside className="reminder-panel">
         <p className="eyebrow">Inside the dashboard</p>
-        <h3>Admin panel, tickets, events, notifications, profile</h3>
+        <h3>Admin panel, tickets, events, profile settings</h3>
         <ul>
           {dashboardHighlights.map((highlight) => (
             <li key={highlight}>{highlight}</li>
           ))}
         </ul>
         <p className="muted">
-          Stripe responses are mocked locally, but every screen is ready for the demo.
+          Stripe responses are mocked locally, all follow-ups go out by mail automatically.
         </p>
       </aside>
     </section>

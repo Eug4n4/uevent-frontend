@@ -22,21 +22,18 @@ const myEvents = [
     format: 'Conference',
     status: 'Ticketing open',
     visitors: '60 / 120',
-    notify: 'new visitors: on',
   },
   {
     name: 'Soft Skills Sandbox',
     format: 'Workshop',
     status: 'Draft: poster ready',
     visitors: '18 / 35',
-    notify: 'new visitors: on',
   },
   {
     name: 'Private Board Dinner',
     format: 'Lecture',
     status: 'Hidden: publish 14 days out',
     visitors: '12 / 24',
-    notify: 'new visitors: off',
   },
 ]
 
@@ -44,12 +41,6 @@ const ticketLedger = [
   { code: '#NIC-4821', event: 'YabiYada Fintech Catchup', price: '€95', promo: 'NONE', status: 'Paid' },
   { code: '#NIC-4822', event: 'Soft Skills Sandbox', price: '€32', promo: 'CALM20', status: 'Paid' },
   { code: '#NIC-4823', event: 'LaLaLa Music + Civic Fest', price: 'FREE', promo: 'N/A', status: 'RSVP' },
-]
-
-const notifications = [
-  { title: 'New comment on Soft Skills Sandbox', time: '2m ago', type: 'comment' },
-  { title: 'Ticket payout processed (mock Stripe)', time: '30m ago', type: 'payout' },
-  { title: 'Promo CALM20 redeemed 3x', time: '1h ago', type: 'promo' },
 ]
 
 const profileHints = [
@@ -60,7 +51,6 @@ const profileHints = [
 
 export function AdminPage() {
   const [showName, setShowName] = useState(true)
-  const [notifyVisitors, setNotifyVisitors] = useState(true)
 
   return (
     <div className="app-shell admin-shell">
@@ -77,7 +67,7 @@ export function AdminPage() {
       <main className="admin-layout">
         <section className="story-panel">
           <p className="eyebrow">Admin console</p>
-          <h2>Manage events, tickets, notifications, and privacy toggles</h2>
+          <h2>Manage events, tickets, and privacy toggles</h2>
           <p className="lead">
             Everything here is mocked but wired to the same components we will use once auth
             and real data arrive. Each block mirrors the backend requirements for the demo.
@@ -90,14 +80,6 @@ export function AdminPage() {
                 onChange={() => setShowName((value) => !value)}
               />
               Show my name on attendee lists
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={notifyVisitors}
-                onChange={() => setNotifyVisitors((value) => !value)}
-              />
-              Notify me about new visitors
             </label>
           </div>
         </section>
@@ -137,10 +119,6 @@ export function AdminPage() {
                   <span>Visitors</span>
                   <p>{event.visitors}</p>
                 </div>
-                <div>
-                  <span>Alerts</span>
-                  <p>{event.notify}</p>
-                </div>
               </article>
             ))}
           </div>
@@ -174,26 +152,6 @@ export function AdminPage() {
         </section>
 
         <section className="admin-flex">
-          <article className="admin-section compact">
-            <header>
-              <div>
-                <p className="eyebrow">Notifications</p>
-                <h3>What the system will send</h3>
-              </div>
-            </header>
-            <ul className="notification-list">
-              {notifications.map((note) => (
-                <li key={note.title}>
-                  <div>
-                    <strong>{note.title}</strong>
-                    <span>{note.time}</span>
-                  </div>
-                  <span className="badge">{note.type}</span>
-                </li>
-              ))}
-            </ul>
-          </article>
-
           <article className="admin-section compact">
             <header>
               <div>

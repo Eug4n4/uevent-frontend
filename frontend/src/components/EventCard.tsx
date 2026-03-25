@@ -27,7 +27,6 @@ export type EventPreview = {
   mapHint: string
   visibility: 'everyone' | 'attendees'
   promoCodes: number
-  notificationPref: 'all' | 'limit'
   isHighlighted?: boolean
 }
 

@@ -1,4 +1,5 @@
 import { Header } from '../components/Header'
+import { Link } from 'react-router-dom'
 
 const categories = [
   'Conferences',
@@ -19,7 +20,7 @@ const eventDetail = {
   agenda: [
     'Arrival coffee, QR scan, mock reminders going out',
     'Panel about “fintech and stuff” where we point Stripe integration later',
-    'Breakout: show/hide attendee names and send organizer notifications',
+    'Breakout: show/hide attendee names and prep email reminders',
   ],
   price: '€95',
   promoHint: 'PROMO: FROST20 saves 20%',
@@ -78,7 +79,9 @@ export function EventDetailPage() {
               <span>{eventDetail.visibility}</span>
             </div>
             <div className="detail-cta">
-              <button className="primary-btn">Subscribe to event</button>
+              <Link to={`/events/${eventDetail.id}/checkout`} className="primary-btn link-reset">
+                Buy ticket
+              </Link>
               <button className="pill-btn">Follow organizer</button>
             </div>
             <p className="price-block">
