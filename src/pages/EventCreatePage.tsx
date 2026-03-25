@@ -1,6 +1,5 @@
 import { useState } from "react"
 
-
 // подсказки чисто для презентации
 const hints = [
   "Poster upload optional — default art will be used otherwise",
@@ -11,7 +10,6 @@ const hints = [
 ]
 
 export function EventCreatePage() {
-  const [notify, setNotify] = useState(true)
   const [visibility, setVisibility] = useState<"everyone" | "attendees">("everyone")
 
   return (
@@ -20,7 +18,7 @@ export function EventCreatePage() {
         <p className="eyebrow">Create event</p>
         <h2>All config knobs the backend asked for</h2>
         <p className="lead">
-          This form is purely illustrative — it mirrors the required fields: posters, notifications,
+          This form is purely illustrative — it mirrors the required fields: posters,
           attendee visibility, publication timing, promo codes, and redirect URL.
         </p>
         <ul className="profile-task-list">
@@ -103,15 +101,7 @@ export function EventCreatePage() {
         </fieldset>
 
         <fieldset>
-          <legend>Notifications & privacy</legend>
-          <label className="toggle-inline">
-            <input
-              type="checkbox"
-              checked={notify}
-              onChange={() => setNotify((value) => !value)}
-            />
-            Notify me about every new visitor
-          </label>
+          <legend>Attendee privacy</legend>
           <div className="radio-group">
             <span>Attendee list visible to</span>
             <label>

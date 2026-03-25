@@ -1,26 +1,22 @@
-import { useState } from "react"
-
-
 
 const checklist = [
   "Company name, email, location are required per spec",
   "Upload a logo/poster to use across events",
-  "Add a short description and news snippet",
-  "Set notification preferences for new visitors",
   "Plan redirect URL for event buyers",
 ]
 
 export function CompanyCreatePage() {
-  const [notifyFollowers, setNotifyFollowers] = useState(true)
 
   return (
+   
+
     <main className="create-layout">
       <section className="story-panel">
         <p className="eyebrow">Create company</p>
-        <h2>Your brand space for events + news</h2>
+        <h2>Your brand space for events</h2>
         <p className="lead">
           This mock form mirrors every field backend teammates expect: legal info, contact,
-          news updates, and notification preferences. Replace with real data once APIs are wired.
+          and redirect links. Replace with real data once APIs are wired.
         </p>
         <ul className="profile-task-list">
           {checklist.map((item) => (
@@ -57,10 +53,6 @@ export function CompanyCreatePage() {
             <span>About the company</span>
             <textarea rows={4} placeholder="Share a short mission statement for the profile page." />
           </label>
-          <label>
-            <span>Latest news update</span>
-            <textarea rows={3} placeholder="Add a mock news snippet for the public feed." />
-          </label>
         </fieldset>
 
         <fieldset>
@@ -85,18 +77,6 @@ export function CompanyCreatePage() {
             <p>Upload company logo / poster</p>
             <small>PNG/SVG preferred. Optional — default ice cube mascot otherwise.</small>
           </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Notifications</legend>
-          <label className="toggle-inline">
-            <input
-              type="checkbox"
-              checked={notifyFollowers}
-              onChange={() => setNotifyFollowers((value) => !value)}
-            />
-            Email me when someone follows the company or buys tickets
-          </label>
         </fieldset>
 
         <fieldset>

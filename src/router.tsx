@@ -3,9 +3,12 @@ import App from "./App";
 import { AdminPage } from "./pages/AdminPage";
 import { AuthPage } from "./pages/AuthPage";
 import { CompanyCreatePage } from "./pages/CompanyCreatePage";
+import { CompanyProfilePage } from "./pages/CompanyProfilePage";
+import { EventCheckoutPage } from "./pages/EventCheckoutPage";
 import { EventCreatePage } from "./pages/EventCreatePage";
 import { EventDetailPage } from "./pages/EventDetailPage";
 import { HomePage } from "./pages/HomePage";
+import { UserProfilePage } from "./pages/UserProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +28,23 @@ const router = createBrowserRouter([
         element: <AdminPage />
       },
       {
+        path: "company",
+        element: <CompanyProfilePage />
+      },
+      {
+        path: "companies",
+        children: [
+          {
+            path: "new",
+            element: <CompanyCreatePage />
+          }
+        ]
+      },
+      {
+        path: "profile",
+        element: <UserProfilePage />
+      },
+      {
         path: "events",
         children: [
           {
@@ -33,16 +53,11 @@ const router = createBrowserRouter([
           },
           {
             path: ":eventId",
-            element: <EventDetailPage />
-          }
-        ]
-      },
-      {
-        path: "companies",
-        children: [
+            element: <EventDetailPage />,
+          },
           {
-            path: "new",
-            element: <CompanyCreatePage />
+            path: ":eventId/checkout",
+            element: <EventCheckoutPage />
           }
         ]
       }

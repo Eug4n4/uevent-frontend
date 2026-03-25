@@ -2,7 +2,6 @@ import { useMemo, useState } from "react"
 import { type EventPreview } from "../components/EventCard"
 import { EventGrid } from "../components/sections/EventGrid"
 import { FilterPanel } from "../components/sections/FilterPanel"
-import { HeroSection } from "../components/sections/HeroSection"
 import { OrganizerShowcase } from "../components/sections/OrganizerShowcase"
 
 const categories = [
@@ -68,7 +67,6 @@ const upcomingEvents: EventPreview[] = [
     mapHint: "Random downtown venue",
     visibility: "everyone",
     promoCodes: 1,
-    notificationPref: "all",
     isHighlighted: true,
   },
   {
@@ -101,7 +99,6 @@ const upcomingEvents: EventPreview[] = [
     mapHint: "Coworking floor B",
     visibility: "attendees",
     promoCodes: 3,
-    notificationPref: "all",
   },
   {
     id: "ev-riverfest",
@@ -134,7 +131,6 @@ const upcomingEvents: EventPreview[] = [
     mapHint: "Pier C stage",
     visibility: "everyone",
     promoCodes: 0,
-    notificationPref: "limit",
   },
 ]
 
@@ -151,7 +147,7 @@ const organizerSpotlights = [
     name: "Nervous System Collective",
     mission: "Focus on communication psychology for team leads.",
     metrics: ["4 cities", "70+ group sessions"],
-    entrypoint: "Post a news item",
+    entrypoint: "Open dashboard",
     path: "/admin",
   },
   {
@@ -190,10 +186,8 @@ export function HomePage() {
   }, [formatFilter, themeFilter, sortBy])
 
   return (
-   
-
     <main className="landing">
-      <HeroSection category={category} highlights={highlights} scenarios={demoScenarios} />
+      {/* <HeroSection category={category} highlights={highlights} scenarios={demoScenarios} /> */}
 
       <FilterPanel
         formatFilters={formatFilters}

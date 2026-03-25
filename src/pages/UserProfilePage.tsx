@@ -1,40 +1,23 @@
-import { useState } from 'react'
-import { Header } from '../components/Header'
-
-const categories = [
-  'Conferences',
-  'Lectures',
-  'Workshops',
-  'Fests',
-  'Retreats',
-  'Community Labs',
-]
+import { useState } from "react"
 
 const subscriptions = [
-  { title: 'YabiYada Fintech Catchup', status: 'Subscribed', organizer: '@mockventures' },
-  { title: 'Soft Skills Sandbox', status: 'Subscribed', organizer: '@talkingheads' },
+  { title: "YabiYada Fintech Catchup", status: "Subscribed", organizer: "@mockventures" },
+  { title: "Soft Skills Sandbox", status: "Subscribed", organizer: "@talkingheads" },
 ]
 
 const tickets = [
-  { code: '#NIC-4821', event: 'YabiYada Fintech Catchup', seat: 'Free roam', status: 'ready' },
-  { code: '#NIC-4822', event: 'Soft Skills Sandbox', seat: 'Row B · 09', status: 'emailed' },
+  { code: "#NIC-4821", event: "YabiYada Fintech Catchup", seat: "Free roam", status: "ready" },
+  { code: "#NIC-4822", event: "Soft Skills Sandbox", seat: "Row B · 09", status: "emailed" },
 ]
 
 export function UserProfilePage() {
-  const [avatar, setAvatar] = useState('https://placehold.co/160x160?text=nICE')
+  const [avatar, setAvatar] = useState("https://placehold.co/160x160?text=nICE")
 
   return (
     <div className="app-shell">
       <div className="aura aura-one"></div>
       <div className="aura aura-two"></div>
 
-      <Header
-        categories={categories}
-        activeCategory={categories[0]}
-        onSelect={() => undefined}
-        showCategories={false}
-        loggedIn
-      />
 
       <main className="profile-layout">
         <section className="story-panel">
@@ -55,7 +38,7 @@ export function UserProfilePage() {
             <button
               type="button"
               className="pill-btn"
-              onClick={() => setAvatar('https://placehold.co/160x160?text=COOL')}
+              onClick={() => setAvatar("https://placehold.co/160x160?text=COOL")}
             >
               Upload placeholder
             </button>
