@@ -27,7 +27,8 @@ export default defineConfig([
     rules: {
         "@stylistic/quotes": ["error", "double"],
         "@stylistic/indent": ["error", 2],
-        "@stylistic/jsx-tag-spacing": ["error", {"beforeSelfClosing": "always"}]
+        "@stylistic/jsx-tag-spacing": ["error", {"beforeSelfClosing": "always"}],
+        "@stylistic/object-curly-spacing": ["error", "always"]
     }
   },
 ])
