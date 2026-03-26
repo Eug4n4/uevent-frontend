@@ -1,6 +1,7 @@
 import type { IRootState } from "@/state/store"
 import { useSelector } from "react-redux"
 import { NavLink } from "react-router-dom"
+import UserAvatar from "./icons/UserAvatar"
 
 const IceLogo = () => (
   <svg
@@ -83,13 +84,12 @@ export function Header() {
           Home
         </NavLink>
         
-        {/* категории убрали — останутся только home + auth/avatar */}
         {isAuthenticated ? (
           <NavLink
             to="/profile"
             className={({ isActive }) => `avatar-link ${isActive ? "active" : ""}`}
           >
-            <span className="avatar-circle">UE</span>
+            <UserAvatar />
           </NavLink>
         ) : (
           <NavLink
