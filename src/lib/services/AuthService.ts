@@ -13,7 +13,7 @@ export class AuthService {
         attributes: dto
       }
     }
-    return api.post("account/registration", payload)
+    return api.post("accounts/registration", payload)
   }
 
   static async loginWithPassword(dto: LoginDetails): Promise<AuthResponse> {
@@ -23,7 +23,7 @@ export class AuthService {
         attributes: dto
       }
     }
-    const account = await api.post<ResponsePayload<AccountAttributes, AccountRelationships>>("account/login", payload);
+    const account = await api.post<ResponsePayload<AccountAttributes, AccountRelationships>>("accounts/login", payload);
     const profile = await api.get<ResponsePayload<ProfileAttributes>>("profiles/me"); 
     const result = {
       id: account.data.data.id,
@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   static async refresh(signal: AbortSignal) {
-    await axios.post("account/refresh", undefined, { baseURL: api.defaults.baseURL, withCredentials: true, signal })
+    await axios.post("accounts/refresh", undefined, { baseURL: api.defaults.baseURL, withCredentials: true, signal })
   }
     
 }

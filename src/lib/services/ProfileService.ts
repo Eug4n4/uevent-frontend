@@ -7,7 +7,7 @@ import type { ResponsePayload } from "./types/types";
 export class ProfileService {
 
   static async getProfileWithAccount(): Promise<AuthResponse> {
-    const account = await api.get<ResponsePayload<AccountAttributes, AccountRelationships>>("account/me");
+    const account = await api.get<ResponsePayload<AccountAttributes, AccountRelationships>>("accounts/me");
     const profile = await api.get<ResponsePayload<ProfileAttributes>>("profiles/me"); 
     const result = {
       id: account.data.data.id,

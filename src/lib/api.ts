@@ -18,10 +18,10 @@ api.interceptors.response.use(
     console.log(`ERROR OCCURED WHEN ACCESSING: ${originalRequest.url} CODE: ${error.response?.status} MESSAGE: ${error.message}`)
     if (
       error.response?.status === 401 &&
-            originalRequest.url !== "account/refresh"
+            originalRequest.url !== "accounts/refresh"
     ) {
       try {
-        await api.post("account/refresh");
+        await api.post("accounts/refresh");
         return api.request(originalRequest);
       } catch (err) {
         store.dispatch(logout())
