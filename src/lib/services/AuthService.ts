@@ -34,8 +34,8 @@ export class AuthService {
 
   }
 
-  static async loginWithGoogle(code: string) {
-
+  static loginWithGoogle() {
+    window.location.href = `${api.defaults.baseURL}/accounts/login/google`
   }
 
   static async refresh(signal: AbortSignal) {

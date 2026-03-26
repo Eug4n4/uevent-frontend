@@ -160,7 +160,7 @@ export function AuthCard({
         <div className="divider">
           <span>or</span>
         </div>
-        <button type="button" className="pill-btn google-btn">
+        <button type="button" className="pill-btn google-btn" onClick={() => AuthService.loginWithGoogle()}>
           Continue with Google
         </button>
       </form>
