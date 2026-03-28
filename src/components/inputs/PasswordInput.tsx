@@ -1,7 +1,6 @@
 import { useState, type InputHTMLAttributes } from "react";
 
-
-const PasswordInput: React.FC<InputHTMLAttributes<HTMLInputElement>> = ({ className, ...rest  }) => {
+const PasswordInput: React.FC<InputHTMLAttributes<HTMLInputElement>> = ({ className, ...rest }) => {
   const [hidePassword, setHidePassword] = useState(true);
   function getVisibilityEye() {
     return (
@@ -34,14 +33,10 @@ const PasswordInput: React.FC<InputHTMLAttributes<HTMLInputElement>> = ({ classN
   }
   return (
     <div className={className ? className : "password-input"}>
-      <input
-        type={hidePassword ? "password" : "text"}
-        {...rest}
-      />
+      <input type={hidePassword ? "password" : "text"} {...rest} />
       {getVisibilityEye()}
     </div>
   );
-}
+};
 
-
-export default PasswordInput
+export default PasswordInput;

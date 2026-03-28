@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom"
-
+import { Link } from "react-router-dom";
 
 // вся эта структура временная, ждём настоящие данные
 const eventDetail = {
@@ -19,31 +18,30 @@ const eventDetail = {
   dateRange: "12 Feb 2025 • 18:00 – 22:00",
   visibility: "Visitor list open to everyone",
   mapHint: "Google Maps placeholder will render here",
-  poster:
-    "https://images.unsplash.com/photo-1475724017904-b712052c192a?auto=format&fit=crop&w=900&q=60",
-}
+  poster: "https://images.unsplash.com/photo-1475724017904-b712052c192a?auto=format&fit=crop&w=900&q=60",
+};
 
 const attendees = [
   { name: "Alina Kozak", company: "Polar DAO" },
   { name: "Jon A (hidden)", company: "prefers private" },
   { name: "Mateo Garcia", company: "Brightbank" },
   { name: "Iris Y (hidden)", company: "stealth" },
-]
+];
 
 const comments = [
   { author: "Mock Organizer", role: "Organizer", body: "We will showcase payment + reminder emails here." },
   { author: "Demo User", role: "Attendee", body: "Toggling “show my name” should reflect instantly." },
   { author: "Beta Host", role: "Organizer", body: "Stripe responses still mocked, but UI is ready." },
-]
+];
 
 const organizer = {
   name: "Placeholder Ventures",
   handle: "@mockventures",
   bio: "Team responsible for the sandbox content. Real data will hydrate these cards later.",
   otherEvents: ["Soft Skills Sandbox", "LaLaLa Music + Civic Fest"],
-}
+};
 
-const similarEvents = ["Fintech 101", "Payments Sandbox", "Cold Outreach Camp"] // пока просто всплывающие теги
+const similarEvents = ["Fintech 101", "Payments Sandbox", "Cold Outreach Camp"]; // пока просто всплывающие теги
 
 export function EventDetailPage() {
   return (
@@ -175,5 +173,5 @@ export function EventDetailPage() {
         </form>
       </section>
     </main>
-  )
+  );
 }

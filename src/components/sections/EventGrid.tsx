@@ -1,8 +1,8 @@
-import { EventCard, type EventPreview } from "../EventCard"
+import { EventCard, type EventPreview } from "../EventCard";
 
 type EventGridProps = {
-  events: EventPreview[]
-}
+  events: EventPreview[];
+};
 
 export function EventGrid({ events }: EventGridProps) {
   return (
@@ -11,5 +11,5 @@ export function EventGrid({ events }: EventGridProps) {
         <EventCard key={event.id} event={event} />
       ))}
     </section>
-  )
+  );
 }

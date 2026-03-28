@@ -5,16 +5,15 @@ const company = {
   email: "team@placeholder.co",
   location: "Oslo, Norway",
   redirect: "https://nice.app/mock-company",
-}
+};
 
 const companyEvents = [
   { title: "YabiYada Fintech Catchup", date: "12 Feb 2025", status: "Live" },
   { title: "Private Board Dinner", date: "28 Feb 2025", status: "Scheduled" },
-]
+];
 
 export function CompanyProfilePage() {
   return (
-
     <main className="company-layout">
       <section className="story-panel">
         <p className="eyebrow">Company profile</p>
@@ -64,5 +63,5 @@ export function CompanyProfilePage() {
         </div>
       </section>
     </main>
-  )
+  );
 }

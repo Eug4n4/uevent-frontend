@@ -3,5 +3,4 @@ export interface ProfileAttributes {
   avatar_url: string;
   updated_at: string;
   created_at: string;
-
 }

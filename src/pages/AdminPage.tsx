@@ -1,11 +1,10 @@
-import { useState } from "react"
-
+import { useState } from "react";
 
 const adminStats = [
   { label: "Live events", value: "04", helper: "publishing this month" },
   { label: "Tickets sold", value: "238", helper: "Stripe mocked receipts" },
   { label: "Followers", value: "1.3K", helper: "organizer subscribers" },
-]
+];
 
 const myEvents = [
   {
@@ -26,22 +25,22 @@ const myEvents = [
     status: "Hidden: publish 14 days out",
     visitors: "12 / 24",
   },
-]
+];
 
 const ticketLedger = [
   { code: "#NIC-4821", event: "YabiYada Fintech Catchup", price: "€95", promo: "NONE", status: "Paid" },
   { code: "#NIC-4822", event: "Soft Skills Sandbox", price: "€32", promo: "CALM20", status: "Paid" },
   { code: "#NIC-4823", event: "LaLaLa Music + Civic Fest", price: "FREE", promo: "N/A", status: "RSVP" },
-]
+];
 
 const profileHints = [
   "Update display photo & tagline",
   "Toggle attendee visibility per event",
   "Edit company legal & redirect URL",
-]
+];
 
 export function AdminPage() {
-  const [showName, setShowName] = useState(true)
+  const [showName, setShowName] = useState(true);
 
   return (
     <main className="admin-layout">
@@ -49,16 +48,12 @@ export function AdminPage() {
         <p className="eyebrow">Admin console</p>
         <h2>Manage events, tickets, and privacy toggles</h2>
         <p className="lead">
-          Everything here is mocked but wired to the same components we will use once auth
-          and real data arrive. Each block mirrors the backend requirements for the demo.
+          Everything here is mocked but wired to the same components we will use once auth and real data arrive. Each
+          block mirrors the backend requirements for the demo.
         </p>
         <div className="toggle-row">
           <label>
-            <input
-              type="checkbox"
-              checked={showName}
-              onChange={() => setShowName((value) => !value)}
-            />
+            <input type="checkbox" checked={showName} onChange={() => setShowName((value) => !value)} />
             Show my name on attendee lists
           </label>
         </div>
@@ -150,5 +145,5 @@ export function AdminPage() {
         </article>
       </section>
     </main>
-  )
+  );
 }

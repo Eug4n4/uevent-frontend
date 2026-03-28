@@ -5,7 +5,7 @@ type AuthState = {
   isAuthenticated: boolean;
   isLoading: boolean;
   user: AuthResponse | null;
-}
+};
 
 const initialState: AuthState = {
   isAuthenticated: false,
@@ -19,7 +19,7 @@ const authSlice = createSlice({
   reducers: {
     loginSuccess: (state, action) => {
       state.isAuthenticated = true;
-      state.user = action.payload
+      state.user = action.payload;
       state.isLoading = false;
     },
     logout: (state) => {
@@ -29,8 +29,8 @@ const authSlice = createSlice({
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
-    }
-  }
-})
+    },
+  },
+});
 export const { loginSuccess, logout, setLoading } = authSlice.actions;
 export default authSlice.reducer;

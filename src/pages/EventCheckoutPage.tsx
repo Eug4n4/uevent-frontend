@@ -1,12 +1,10 @@
-
 const ticketOptions = [
   { label: "General admission", price: "€95", perks: ["Access to panels", "Mock reminders via email"] },
   { label: "Workshop add-on", price: "€25", perks: ["Hands-on session", "Priority check-in"] },
-]
+];
 
 export function EventCheckoutPage() {
   return (
-   
     <main className="checkout-layout">
       <section className="story-panel">
         <p className="eyebrow">Step 1 · Review</p>
@@ -55,14 +53,12 @@ export function EventCheckoutPage() {
         </label>
         <label>
           <span>Stripe placeholder</span>
-          <div className="stripe-mock">
-            Stripe Elements will render here. Пока просто заглушка.
-          </div>
+          <div className="stripe-mock">Stripe Elements will render here. Пока просто заглушка.</div>
         </label>
         <button type="button" className="primary-btn">
           Continue to Stripe (mock)
         </button>
       </section>
     </main>
-  )
+  );
 }

@@ -1,16 +1,16 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
 type OrganizerSpotlight = {
-  name: string
-  mission: string
-  metrics: string[]
-  entrypoint: string
-  path: string
-}
+  name: string;
+  mission: string;
+  metrics: string[];
+  entrypoint: string;
+  path: string;
+};
 
 type OrganizerShowcaseProps = {
-  spotlights: OrganizerSpotlight[]
-}
+  spotlights: OrganizerSpotlight[];
+};
 
 export function OrganizerShowcase({ spotlights }: OrganizerShowcaseProps) {
   return (
@@ -18,9 +18,7 @@ export function OrganizerShowcase({ spotlights }: OrganizerShowcaseProps) {
       <div>
         <p className="eyebrow">Companies</p>
         <h3>Organizers expand their reach through nICE</h3>
-        <p>
-          This is where we demo company creation and both event-creation flows (with or without a poster).
-        </p>
+        <p>This is where we demo company creation and both event-creation flows (with or without a poster).</p>
       </div>
       <div className="spotlight-grid">
         {spotlights.map((spotlight) => (
@@ -41,5 +39,5 @@ export function OrganizerShowcase({ spotlights }: OrganizerShowcaseProps) {
         ))}
       </div>
     </section>
-  )
+  );
 }

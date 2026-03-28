@@ -4,24 +4,24 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 type CheckAuthProps = {
-  children: React.ReactNode
-}
+  children: React.ReactNode;
+};
 
 const CheckAuth = ({ children }: CheckAuthProps) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
     const getMe = async () => {
       try {
         const response = await ProfileService.getProfileWithAccount();
-        dispatch(loginSuccess(response))
+        dispatch(loginSuccess(response));
         return;
-      } catch(e) {
-        console.log(`CheckAuth: ${e?.name}: ${e?.message}`)
+      } catch (e) {
+        console.log(`CheckAuth: ${e?.name}: ${e?.message}`);
       }
-    }
-    getMe()
-  }, [])
+    };
+    getMe();
+  }, []);
   return children;
-}
+};
 
 export default CheckAuth;

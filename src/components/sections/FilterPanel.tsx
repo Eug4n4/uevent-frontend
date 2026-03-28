@@ -1,15 +1,15 @@
 type FilterPanelProps = {
-  formatFilters: string[]
-  themeFilters: string[]
-  sortOptions: Array<{ label: string; value: string }>
-  formatFilter: string
-  themeFilter: string
-  sortBy: string
-  onFormatChange: (value: string) => void
-  onThemeChange: (value: string) => void
-  onSortChange: (value: string) => void
-  categoryLabel: string
-}
+  formatFilters: string[];
+  themeFilters: string[];
+  sortOptions: Array<{ label: string; value: string }>;
+  formatFilter: string;
+  themeFilter: string;
+  sortBy: string;
+  onFormatChange: (value: string) => void;
+  onThemeChange: (value: string) => void;
+  onSortChange: (value: string) => void;
+  categoryLabel: string;
+};
 
 export function FilterPanel({
   formatFilters,
@@ -64,11 +64,7 @@ export function FilterPanel({
 
         <div className="sort-control">
           <label htmlFor="sort">Sort by</label>
-          <select
-            id="sort"
-            value={sortBy}
-            onChange={(event) => onSortChange(event.target.value)}
-          >
+          <select id="sort" value={sortBy} onChange={(event) => onSortChange(event.target.value)}>
             {sortOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -78,5 +74,5 @@ export function FilterPanel({
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,8 +1,8 @@
 type HeroSectionProps = {
-  category: string
-  highlights: Array<{ label: string; value: string }>
-  scenarios: string[]
-}
+  category: string;
+  highlights: Array<{ label: string; value: string }>;
+  scenarios: string[];
+};
 
 export function HeroSection({ category, highlights, scenarios }: HeroSectionProps) {
   return (
@@ -11,8 +11,8 @@ export function HeroSection({ category, highlights, scenarios }: HeroSectionProp
         <p className="eyebrow">Powered by nICE</p>
         <h2>Chilled spaces for warm introductions</h2>
         <p className="lead">
-          nICE curates {category.toLowerCase()} for any social energy level—scroll, prep a
-          talk, or spin up invite-only salons without context switching.
+          nICE curates {category.toLowerCase()} for any social energy level—scroll, prep a talk, or spin up invite-only
+          salons without context switching.
         </p>
 
         <div className="chips-row">
@@ -41,5 +41,5 @@ export function HeroSection({ category, highlights, scenarios }: HeroSectionProp
         </ul>
       </aside>
     </section>
-  )
+  );
 }

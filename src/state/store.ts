@@ -3,9 +3,9 @@ import authReducer from "./auth/auth.slice";
 
 const store = configureStore({
   reducer: {
-    auth: authReducer
-  }
-})
+    auth: authReducer,
+  },
+});
 
-export type IRootState = ReturnType<typeof store.getState>
+export type IRootState = ReturnType<typeof store.getState>;
 export default store;

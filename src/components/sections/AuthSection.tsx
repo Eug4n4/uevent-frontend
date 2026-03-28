@@ -1,20 +1,17 @@
-import { AuthCard } from "../AuthCard"
+import { AuthCard } from "../AuthCard";
 
 type AuthSectionProps = {
-  mode: "login" | "register"
-  onModeChange: (mode: "login" | "register") => void
-}
+  mode: "login" | "register";
+  onModeChange: (mode: "login" | "register") => void;
+};
 
 const dashboardHighlights = [
   "Event reminders plus ticket emails",
   "Toggle “show my name” in attendee lists",
   "Dedicated tabs for tickets, events, and companies",
-]
+];
 
-export function AuthSection({
-  mode,
-  onModeChange,
-}: AuthSectionProps) {
+export function AuthSection({ mode, onModeChange }: AuthSectionProps) {
   return (
     <section className="auth-anchor">
       <AuthCard mode={mode} onModeChange={onModeChange} />
@@ -27,10 +24,8 @@ export function AuthSection({
             <li key={highlight}>{highlight}</li>
           ))}
         </ul>
-        <p className="muted">
-          Stripe responses are mocked locally, all follow-ups go out by mail automatically.
-        </p>
+        <p className="muted">Stripe responses are mocked locally, all follow-ups go out by mail automatically.</p>
       </aside>
     </section>
-  )
+  );
 }

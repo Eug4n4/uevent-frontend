@@ -1,40 +1,40 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
 export type EventPreview = {
-  id: string
-  title: string
-  format: string
-  theme: string
-  summary: string
-  location: string
-  datetime: string
-  price: number
-  currency: string
-  isFree?: boolean
+  id: string;
+  title: string;
+  format: string;
+  theme: string;
+  summary: string;
+  location: string;
+  datetime: string;
+  price: number;
+  currency: string;
+  isFree?: boolean;
   organizer: {
-    name: string
-    handle: string
-    avatar: string
-  }
-  poster: string
+    name: string;
+    handle: string;
+    avatar: string;
+  };
+  poster: string;
   attendees: Array<{
-    name: string
-    showName: boolean
-  }>
-  commentCount: number
-  subscriberCount: number
-  similar: string[]
-  mapHint: string
-  visibility: "everyone" | "attendees"
-  promoCodes: number
-  isHighlighted?: boolean
-}
+    name: string;
+    showName: boolean;
+  }>;
+  commentCount: number;
+  subscriberCount: number;
+  similar: string[];
+  mapHint: string;
+  visibility: "everyone" | "attendees";
+  promoCodes: number;
+  isHighlighted?: boolean;
+};
 
 type EventCardProps = {
-  event: EventPreview
-}
+  event: EventPreview;
+};
 
-const VIEWER_PLACEHOLDER = "HIDDEN"
+const VIEWER_PLACEHOLDER = "HIDDEN";
 
 export function EventCard({ event }: EventCardProps) {
   const formattedDate = new Intl.DateTimeFormat("uk-UA", {
@@ -43,27 +43,23 @@ export function EventCard({ event }: EventCardProps) {
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-  }).format(new Date(event.datetime))
+  }).format(new Date(event.datetime));
 
   const formattedPrice = event.isFree
     ? "Free with RSVP"
     : `${event.price.toLocaleString("en-US", {
-      style: "currency",
-      currency: event.currency,
-    })}`
+        style: "currency",
+        currency: event.currency,
+      })}`;
 
-  const attendees = event.attendees.slice(0, 4)
+  const attendees = event.attendees.slice(0, 4);
 
   return (
     <article className={`event-card ${event.isHighlighted ? "highlighted" : ""}`}>
       <div className="badge-row">
         <span>{event.format}</span>
         <span>{event.theme}</span>
-        <span>
-          {event.visibility === "everyone"
-            ? "Visitor list open"
-            : "Visible to attendees only"}
-        </span>
+        <span>{event.visibility === "everyone" ? "Visitor list open" : "Visible to attendees only"}</span>
       </div>
 
       <div className="card-head">
@@ -71,14 +67,7 @@ export function EventCard({ event }: EventCardProps) {
           <h3>{event.title}</h3>
           <p className="event-summary">{event.summary}</p>
         </div>
-        <img
-          src={event.poster}
-          alt=""
-          width={140}
-          height={140}
-          className="poster-thumb"
-          loading="lazy"
-        />
+        <img src={event.poster} alt="" width={140} height={140} className="poster-thumb" loading="lazy" />
       </div>
 
       <div className="event-meta">
@@ -93,9 +82,7 @@ export function EventCard({ event }: EventCardProps) {
         <div>
           <span>Price</span>
           <strong>{formattedPrice}</strong>
-          {event.promoCodes > 0 && (
-            <small>{event.promoCodes} promo code(s) active</small>
-          )}
+          {event.promoCodes > 0 && <small>{event.promoCodes} promo code(s) active</small>}
         </div>
       </div>
 
@@ -129,9 +116,7 @@ export function EventCard({ event }: EventCardProps) {
         </div>
         <div className="attendee-info">
           <strong>{event.attendees.length} attendees already confirmed</strong>
-          <span>
-            Visibility: {event.visibility === "everyone" ? "everyone" : "attendees only"}
-          </span>
+          <span>Visibility: {event.visibility === "everyone" ? "everyone" : "attendees only"}</span>
         </div>
       </div>
 
@@ -155,7 +140,7 @@ export function EventCard({ event }: EventCardProps) {
         </div>
       </div>
     </article>
-  )
+  );
 }
 
 function initials(name: string) {
@@ -163,5 +148,5 @@ function initials(name: string) {
     .split(" ")
     .map((part) => part[0]?.toUpperCase() ?? "")
     .join("")
-    .slice(0, 2)
+    .slice(0, 2);
 }

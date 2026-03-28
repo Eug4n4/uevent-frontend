@@ -1,22 +1,18 @@
-
 const checklist = [
   "Company name, email, location are required per spec",
   "Upload a logo/poster to use across events",
   "Plan redirect URL for event buyers",
-]
+];
 
 export function CompanyCreatePage() {
-
   return (
-   
-
     <main className="create-layout">
       <section className="story-panel">
         <p className="eyebrow">Create company</p>
         <h2>Your brand space for events</h2>
         <p className="lead">
-          This mock form mirrors every field backend teammates expect: legal info, contact,
-          and redirect links. Replace with real data once APIs are wired.
+          This mock form mirrors every field backend teammates expect: legal info, contact, and redirect links. Replace
+          with real data once APIs are wired.
         </p>
         <ul className="profile-task-list">
           {checklist.map((item) => (
@@ -101,5 +97,5 @@ export function CompanyCreatePage() {
         </div>
       </form>
     </main>
-  )
+  );
 }

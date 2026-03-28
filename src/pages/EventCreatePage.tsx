@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from "react";
 
 // подсказки чисто для презентации
 const hints = [
@@ -7,10 +7,10 @@ const hints = [
   "Pick a publication date (immediate or schedule ahead)",
   "Promo codes are optional but nice to show in the demo",
   "Redirect URL is where buyers land after Stripe confirmation",
-]
+];
 
 export function EventCreatePage() {
-  const [visibility, setVisibility] = useState<"everyone" | "attendees">("everyone")
+  const [visibility, setVisibility] = useState<"everyone" | "attendees">("everyone");
 
   return (
     <main className="create-layout">
@@ -18,8 +18,8 @@ export function EventCreatePage() {
         <p className="eyebrow">Create event</p>
         <h2>All config knobs the backend asked for</h2>
         <p className="lead">
-          This form is purely illustrative — it mirrors the required fields: posters,
-          attendee visibility, publication timing, promo codes, and redirect URL.
+          This form is purely illustrative — it mirrors the required fields: posters, attendee visibility, publication
+          timing, promo codes, and redirect URL.
         </p>
         <ul className="profile-task-list">
           {hints.map((hint) => (
@@ -105,19 +105,11 @@ export function EventCreatePage() {
           <div className="radio-group">
             <span>Attendee list visible to</span>
             <label>
-              <input
-                type="radio"
-                checked={visibility === "everyone"}
-                onChange={() => setVisibility("everyone")}
-              />
+              <input type="radio" checked={visibility === "everyone"} onChange={() => setVisibility("everyone")} />
               Everyone
             </label>
             <label>
-              <input
-                type="radio"
-                checked={visibility === "attendees"}
-                onChange={() => setVisibility("attendees")}
-              />
+              <input type="radio" checked={visibility === "attendees"} onChange={() => setVisibility("attendees")} />
               Only confirmed attendees
             </label>
           </div>
@@ -149,5 +141,5 @@ export function EventCreatePage() {
         </div>
       </form>
     </main>
-  )
+  );
 }

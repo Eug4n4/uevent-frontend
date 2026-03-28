@@ -1,4 +1,3 @@
-
 export interface AccountAttributes {
   role: string;
   email: string;
@@ -10,7 +9,7 @@ export interface AccountRelationships {
   profile: {
     data: {
       id: string;
-      type: "profile"
-    }
-  }
+      type: "profile";
+    };
+  };
 }
