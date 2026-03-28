@@ -1,61 +1,68 @@
-import { AuthService } from "@/lib/services/AuthService"
-import { LoginAttributes, RegisterAttributes, type AuthDetails, type RegisterDetails } from "@/lib/services/types/auth.types"
-import { loginSuccess } from "@/state/auth/auth.slice"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useMemo, useState } from "react"
-import { useForm } from "react-hook-form"
-import { useDispatch } from "react-redux"
-import PasswordInput from "./inputs/PasswordInput"
+import { AuthService } from "@/lib/services/AuthService";
+import {
+  LoginAttributes,
+  RegisterAttributes,
+  type AuthDetails,
+  type RegisterDetails,
+} from "@/lib/services/types/auth.types";
+import { loginSuccess } from "@/state/auth/auth.slice";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import PasswordInput from "./inputs/PasswordInput";
 
 type AuthCardProps = {
-  mode: "login" | "register"
-  onModeChange: (mode: "login" | "register") => void
-}
+  mode: "login" | "register";
+  onModeChange: (mode: "login" | "register") => void;
+};
 
 type FeedbackState =
   | { status: "idle"; message?: string }
   | { status: "success"; message: string }
-  | { status: "error"; message: string }
+  | { status: "error"; message: string };
 
-const passwordHint =
-  "Use at least 6 characters mixing upper, lower, digits, and a symbol."
+const passwordHint = "Use at least 6 characters mixing upper, lower, digits, and a symbol.";
 
-export function AuthCard({
-  mode,
-  onModeChange,
-}: AuthCardProps) {
-  const dispatch = useDispatch()
-  const resolver = useMemo(() => zodResolver(mode === "login" ? LoginAttributes : RegisterAttributes), [mode])
-  const { register, handleSubmit, formState: { errors, isSubmitting, isValid }, reset } = useForm<AuthDetails>({ resolver, mode: "all" })
+export function AuthCard({ mode, onModeChange }: AuthCardProps) {
+  const dispatch = useDispatch();
+  const resolver = useMemo(() => zodResolver(mode === "login" ? LoginAttributes : RegisterAttributes), [mode]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid },
+    reset,
+  } = useForm<AuthDetails>({ resolver, mode: "all" });
 
-  const [feedback, setFeedback] = useState<FeedbackState>({ status: "idle" })
-  const [showNameOnLists, setShowNameOnLists] = useState(false)
+  const [feedback, setFeedback] = useState<FeedbackState>({ status: "idle" });
+  const [showNameOnLists, setShowNameOnLists] = useState(false);
 
   const onSubmit = async (data: AuthDetails, event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     if (!isValid) {
       return;
     }
     if (mode === "register") {
-      AuthService.register(data as RegisterDetails).then(() => {
-        setFeedback({
-          status: "success",
-          message: "Account created. You can log in with your new credentials.",
+      AuthService.register(data as RegisterDetails)
+        .then(() => {
+          setFeedback({
+            status: "success",
+            message: "Account created. You can log in with your new credentials.",
+          });
+          onModeChange("login");
         })
-        onModeChange("login")
-      }).catch(console.error)
+        .catch(console.error);
     } else {
-      const response = await AuthService.loginWithPassword(data)
-      dispatch(loginSuccess(response))
-      reset()
+      const response = await AuthService.loginWithPassword(data);
+      dispatch(loginSuccess(response));
+      reset();
       setFeedback({
         status: "success",
         message: `Welcome back, ${JSON.stringify(response)}!`,
-      })
+      });
     }
-  }
-
+  };
 
   return (
     <section className="auth-card" id="auth-panel" aria-live="polite">
@@ -81,23 +88,14 @@ export function AuthCard({
       <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
         <label className="field">
           <span>Email address</span>
-          <input
-            type="email"
-            inputMode="email"
-            placeholder="alex@example.com"
-            {...register("email")}
-          />
+          <input type="email" inputMode="email" placeholder="alex@example.com" {...register("email")} />
           <small>We will send passes and reminders to this inbox.</small>
         </label>
 
         {mode === "register" && (
           <label className="field">
             <span>Username</span>
-            <input
-              type="text"
-              placeholder="skyline.host"
-              {...register("username")}
-            />
+            <input type="text" placeholder="skyline.host" {...register("username")} />
             <small>Your public handle for comments and organizer posts.</small>
           </label>
         )}
@@ -110,52 +108,21 @@ export function AuthCard({
 
         {mode === "register" && (
           <label className="privacy-toggle">
-            <input
-              type="checkbox"
-              checked={showNameOnLists}
-              onChange={() => setShowNameOnLists((value) => !value)}
-            />
-            <span>
-              Display my name on attendee lists for networking purposes (you can
-              change this later)
-            </span>
+            <input type="checkbox" checked={showNameOnLists} onChange={() => setShowNameOnLists((value) => !value)} />
+            <span>Display my name on attendee lists for networking purposes (you can change this later)</span>
           </label>
         )}
 
         {feedback.status !== "idle" && (
-          <p
-            className={`feedback ${feedback.status === "error" ? "error" : "success"}`}
-          >
-            {feedback.message}
-          </p>
+          <p className={`feedback ${feedback.status === "error" ? "error" : "success"}`}>{feedback.message}</p>
         )}
 
-        {errors.email && (
-          <p
-            className={"feedback error"}
-          >{errors.email.message}</p>
-        )}
-        {errors.password && (
-          <p
-            className={"feedback error"}
-          >{errors.password.message}</p>
-        )}
-        {errors.username && (
-          <p
-            className={"feedback error"}
-          >{errors.username.message}</p>
-        )}
+        {errors.email && <p className={"feedback error"}>{errors.email.message}</p>}
+        {errors.password && <p className={"feedback error"}>{errors.password.message}</p>}
+        {errors.username && <p className={"feedback error"}>{errors.username.message}</p>}
 
-        <button
-          className="primary-btn"
-          type="submit"
-          disabled={!isValid}
-        >
-          {isSubmitting
-            ? "Please wait..."
-            : mode === "login"
-              ? "Log in and continue"
-              : "Register account"}
+        <button className="primary-btn" type="submit" disabled={!isValid}>
+          {isSubmitting ? "Please wait..." : mode === "login" ? "Log in and continue" : "Register account"}
         </button>
         <div className="divider">
           <span>or</span>
@@ -164,7 +131,6 @@ export function AuthCard({
           Continue with Google
         </button>
       </form>
-
     </section>
-  )
+  );
 }

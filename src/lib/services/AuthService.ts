@@ -10,36 +10,38 @@ export class AuthService {
     const payload: RegisterDto = {
       data: {
         type: "account",
-        attributes: dto
-      }
-    }
-    return api.post("accounts/registration", payload)
+        attributes: dto,
+      },
+    };
+    return api.post("accounts/registration", payload);
   }
 
   static async loginWithPassword(dto: LoginDetails): Promise<AuthResponse> {
     const payload: LoginDto = {
       data: {
         type: "account",
-        attributes: dto
-      }
-    }
+        attributes: dto,
+      },
+    };
     const account = await api.post<ResponsePayload<AccountAttributes, AccountRelationships>>("accounts/login", payload);
-    const profile = await api.get<ResponsePayload<ProfileAttributes>>("profiles/me"); 
+    const profile = await api.get<ResponsePayload<ProfileAttributes>>("profiles/me");
     const result = {
       id: account.data.data.id,
       ...account.data.data.attributes,
-      ...profile.data.data.attributes
-    }
+      ...profile.data.data.attributes,
+    };
     return result;
-
   }
 
   static loginWithGoogle() {
-    window.location.href = `${api.defaults.baseURL}/accounts/login/google`
+    window.location.href = `${api.defaults.baseURL}/accounts/login/google`;
+  }
+
+  static async logout() {
+    await api.post("accounts/logout");
   }
 
   static async refresh(signal: AbortSignal) {
-    await axios.post("accounts/refresh", undefined, { baseURL: api.defaults.baseURL, withCredentials: true, signal })
+    await axios.post("accounts/refresh", undefined, { baseURL: api.defaults.baseURL, withCredentials: true, signal });
   }
-    
 }

@@ -1,5 +1,12 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
+import AuthRequired from "./components/AuthRequired";
+import ProfileCompanies from "./components/profile/ProfileCompanies";
+import ProfileEvents from "./components/profile/ProfileEvents";
+import ProfileNotifications from "./components/profile/ProfileNotifications";
+import ProfileSettings from "./components/profile/ProfileSettings";
+import ProfileSubscriptions from "./components/profile/ProfileSubscriptions";
+import ProfileTickets from "./components/profile/ProfileTickets";
 import { AdminPage } from "./pages/AdminPage";
 import { AuthPage } from "./pages/AuthPage";
 import { CompanyCreatePage } from "./pages/CompanyCreatePage";
@@ -17,39 +24,73 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomePage />
+        element: <HomePage />,
       },
       {
         path: "auth",
-        element: <AuthPage />
+        element: <AuthPage />,
       },
       {
         path: "admin",
-        element: <AdminPage />
+        element: <AdminPage />,
       },
       {
         path: "company",
-        element: <CompanyProfilePage />
+        element: <CompanyProfilePage />,
       },
       {
         path: "companies",
         children: [
           {
             path: "new",
-            element: <CompanyCreatePage />
-          }
-        ]
+            element: <CompanyCreatePage />,
+          },
+        ],
       },
       {
-        path: "profile",
-        element: <UserProfilePage />
+        path: "profile/:id",
+        element: (
+          <AuthRequired>
+            <UserProfilePage />
+          </AuthRequired>
+        ),
+        children: [
+          {
+            index: true,
+            element: <Navigate to={"settings"} />,
+          },
+          {
+            path: "settings",
+            element: <ProfileSettings />,
+          },
+          {
+            path: "tickets",
+            element: <ProfileTickets />,
+          },
+          {
+            path: "subscriptions",
+            element: <ProfileSubscriptions />,
+          },
+          {
+            path: "notifications",
+            element: <ProfileNotifications />,
+          },
+          {
+            path: "events",
+            element: <ProfileEvents />,
+          },
+          {
+            path: "companies",
+            element: <ProfileCompanies />,
+          },
+        ],
       },
       {
         path: "events",
         children: [
           {
             path: "new",
-            element: <EventCreatePage />
+            element: <EventCreatePage />,
           },
           {
             path: ":eventId",
@@ -57,14 +98,14 @@ const router = createBrowserRouter([
           },
           {
             path: ":eventId/checkout",
-            element: <EventCheckoutPage />
-          }
-        ]
-      }
-    ]
-  }
-])
+            element: <EventCheckoutPage />,
+          },
+        ],
+      },
+    ],
+  },
+]);
 
 export const Router = () => {
-  return <RouterProvider router={router} />
-}
+  return <RouterProvider router={router} />;
+};
