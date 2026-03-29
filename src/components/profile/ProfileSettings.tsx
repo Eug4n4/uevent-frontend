@@ -18,8 +18,8 @@ const usernameSchema = z.object({
   username: z
     .string()
     .min(3, { error: "Username is too short" })
-    .max(32, { error: "Username is too long" })
-    .regex(/^[a-zA-Z0-9\-._!]+$/, { error: "Can only contain letters, numbers, and -._!" }),
+    .max(30, { error: "Username is too long" })
+    .regex(/^[a-zA-Z0-9\-._!\p{L}]+$/u, { error: "Can only contain letters, numbers, and -._!" }),
 });
 
 const ProfileSettings = () => {
