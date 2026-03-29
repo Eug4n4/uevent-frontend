@@ -1,5 +1,5 @@
 import type { AuthResponse } from "@/lib/services/types/auth.types";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 type AuthState = {
   isAuthenticated: boolean;
@@ -27,10 +27,13 @@ const authSlice = createSlice({
       state.user = null;
       state.isLoading = false;
     },
-    setLoading: (state, action) => {
+    setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
+    },
+    updateUser: (state, action: PayloadAction<AuthResponse>) => {
+      state.user = action.payload;
     },
   },
 });
-export const { loginSuccess, logout, setLoading } = authSlice.actions;
+export const { loginSuccess, logout, setLoading, updateUser } = authSlice.actions;
 export default authSlice.reducer;

@@ -15,4 +15,21 @@ export class ProfileService {
     };
     return result;
   }
+
+  static async updateMyAvatar(avatar: Blob) {
+    const formData = new FormData();
+    formData.append("avatar", avatar);
+    return await api.post<ResponsePayload<ProfileAttributes>>("profiles/me/avatar", formData);
+  }
+
+  static async update(username: string, profileId: string) {
+    const payload = {
+      data: {
+        id: profileId,
+        type: "profile",
+        attributes: { username },
+      },
+    };
+    return await api.patch<ResponsePayload<ProfileAttributes>>("profiles/me", payload);
+  }
 }

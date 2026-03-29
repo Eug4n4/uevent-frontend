@@ -1,5 +1,5 @@
 import { ProfileService } from "@/lib/services/ProfileService";
-import { loginSuccess } from "@/state/auth/auth.slice";
+import { loginSuccess, setLoading } from "@/state/auth/auth.slice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -17,6 +17,7 @@ const CheckAuth = ({ children }: CheckAuthProps) => {
         return;
       } catch (e) {
         console.log(`CheckAuth: ${e?.name}: ${e?.message}`);
+        dispatch(setLoading(false));
       }
     };
     getMe();

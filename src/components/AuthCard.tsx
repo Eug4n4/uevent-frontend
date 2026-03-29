@@ -14,6 +14,7 @@ import PasswordInput from "./inputs/PasswordInput";
 
 type AuthCardProps = {
   mode: "login" | "register";
+  // eslint-disable-next-line no-unused-vars
   onModeChange: (mode: "login" | "register") => void;
 };
 
@@ -37,8 +38,10 @@ export function AuthCard({ mode, onModeChange }: AuthCardProps) {
   const [feedback, setFeedback] = useState<FeedbackState>({ status: "idle" });
   const [showNameOnLists, setShowNameOnLists] = useState(false);
 
-  const onSubmit = async (data: AuthDetails, event) => {
-    event.preventDefault();
+  const onSubmit = async (data: AuthDetails, event: React.BaseSyntheticEvent | undefined) => {
+    if (event) {
+      event.preventDefault();
+    }
 
     if (!isValid) {
       return;

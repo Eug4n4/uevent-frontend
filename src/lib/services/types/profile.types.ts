@@ -4,3 +4,5 @@ export interface ProfileAttributes {
   updated_at: string;
   created_at: string;
 }
+
+export type EditableProfileAttributes = Pick<ProfileAttributes, "username">;

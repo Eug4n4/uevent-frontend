@@ -48,7 +48,7 @@ const ProfileTopMenu = () => {
           return;
         }
         return (
-          <NavLink className={"nav-link"} to={link.to}>
+          <NavLink key={link.name} className={"nav-link"} to={link.to}>
             {link.name}
           </NavLink>
         );
