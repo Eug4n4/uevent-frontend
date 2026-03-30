@@ -1,3 +1,5 @@
+import type { EventDto } from "@/lib/services/types/event.types";
+import { toDateTimeString } from "@/utils/format.date";
 import { Link } from "react-router-dom";
 
 export type EventPreview = {
@@ -31,70 +33,74 @@ export type EventPreview = {
 };
 
 type EventCardProps = {
-  event: EventPreview;
+  event: EventDto;
 };
 
-const VIEWER_PLACEHOLDER = "HIDDEN";
+// const VIEWER_PLACEHOLDER = "HIDDEN";
 
 export function EventCard({ event }: EventCardProps) {
-  const formattedDate = new Intl.DateTimeFormat("uk-UA", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(event.datetime));
+  // const formattedDate = new Intl.DateTimeFormat("us", {
+  //   weekday: "short",
+  //   month: "short",
+  //   day: "numeric",
+  //   hour: "2-digit",
+  //   minute: "2-digit",
+  // }).format(new Date(event.datetime));
 
-  const formattedPrice = event.isFree
-    ? "Free with RSVP"
-    : `${event.price.toLocaleString("en-US", {
-        style: "currency",
-        currency: event.currency,
-      })}`;
+  // const formattedPrice = event.isFree
+  //   ? "Free with RSVP"
+  //   : `${event.price.toLocaleString("en-US", {
+  //       style: "currency",
+  //       currency: event.currency,
+  //     })}`;
 
-  const attendees = event.attendees.slice(0, 4);
+  // const attendees = event.attendees.slice(0, 4);
 
   return (
-    <article className={`event-card ${event.isHighlighted ? "highlighted" : ""}`}>
+    <article className={"event-card"}>
       <div className="badge-row">
         <span>{event.format}</span>
-        <span>{event.theme}</span>
-        <span>{event.visibility === "everyone" ? "Visitor list open" : "Visible to attendees only"}</span>
+        {/* <span>{event.theme}</span> */}
+        {/* <span>Visitor list open</span> */}
       </div>
 
       <div className="card-head">
         <div>
           <h3>{event.title}</h3>
-          <p className="event-summary">{event.summary}</p>
+          <p className="event-summary">{event.text}</p>
         </div>
-        <img src={event.poster} alt="" width={140} height={140} className="poster-thumb" loading="lazy" />
+        <div style={{ width: 140, height: 140 }}>
+          <img src={event.banner_url || "/favicon.svg"} alt="" className="poster-thumb" loading="lazy" />
+        </div>
       </div>
 
       <div className="event-meta">
         <div>
           <span>When</span>
-          <strong>{formattedDate}</strong>
+          <strong>
+            {toDateTimeString(event.start_at)} - {toDateTimeString(event.end_at)}
+          </strong>
         </div>
-        <div>
+        {/* <div>
           <span>Where</span>
-          <strong>{event.location}</strong>
-        </div>
-        <div>
+          <strong>{event}</strong>
+        </div> */}
+        {/* <div>
           <span>Price</span>
           <strong>{formattedPrice}</strong>
           {event.promoCodes > 0 && <small>{event.promoCodes} promo code(s) active</small>}
-        </div>
+        </div> */}
       </div>
 
       <div className="organizer-stack">
-        <div className="organizer">
+        {/* <div className="organizer">
           <img src={event.organizer.avatar} alt="" width={48} height={48} />
           <div>
             <strong>{event.organizer.name}</strong>
             <span>{event.organizer.handle}</span>
             <small>{event.subscriberCount}+ organizer followers</small>
           </div>
-        </div>
+        </div> */}
 
         <div className="cta-stack">
           <Link to={`/events/${event.id}`} className="primary-btn ghost link-reset">
@@ -106,7 +112,7 @@ export function EventCard({ event }: EventCardProps) {
         </div>
       </div>
 
-      <div className="attendees-row">
+      {/* <div className="attendees-row">
         <div className="avatars">
           {attendees.map((person, index) => (
             <span key={`${person.name}-${index}`} title={person.name}>
@@ -118,17 +124,17 @@ export function EventCard({ event }: EventCardProps) {
           <strong>{event.attendees.length} attendees already confirmed</strong>
           <span>Visibility: {event.visibility === "everyone" ? "everyone" : "attendees only"}</span>
         </div>
-      </div>
+      </div> */}
 
-      <div className="map-preview">
+      {/* <div className="map-preview">
         <div className="map-marker"></div>
         <div>
           <strong>{event.mapHint}</strong>
           <span>Map placeholder while we wire up the provider.</span>
         </div>
-      </div>
+      </div> */}
 
-      <div className="similar-section">
+      {/* <div className="similar-section">
         <div>
           <span>Comments: {event.commentCount}</span>
           <span>Promos: {event.promoCodes > 0 ? "active" : "none"}</span>
@@ -138,7 +144,7 @@ export function EventCard({ event }: EventCardProps) {
             <span key={tag}>{tag}</span>
           ))}
         </div>
-      </div>
+      </div> */}
     </article>
   );
 }

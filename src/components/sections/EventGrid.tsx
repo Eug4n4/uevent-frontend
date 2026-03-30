@@ -1,7 +1,8 @@
-import { EventCard, type EventPreview } from "../EventCard";
+import type { EventDto } from "@/lib/services/types/event.types";
+import { EventCard } from "../EventCard";
 
 type EventGridProps = {
-  events: EventPreview[];
+  events: EventDto[];
 };
 
 export function EventGrid({ events }: EventGridProps) {

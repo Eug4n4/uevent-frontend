@@ -332,7 +332,7 @@
   gap: 8px;
 }
 
-.filter-group span {
+.filter-group span, .sort-control span {
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
@@ -362,7 +362,7 @@
 
 .events-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
   gap: 32px;
 }
 
@@ -1415,4 +1415,9 @@
 
 .logout-btn {
   margin-top: 12px;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
 }
