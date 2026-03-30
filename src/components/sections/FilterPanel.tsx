@@ -19,7 +19,7 @@ type FormatOptions = {
 
 type FilterPanelProps = FormatOptions & {
   // eslint-disable-next-line no-unused-vars
-  onSubmit: (query?: EventQueryParams) => Promise<void>;
+  onSubmit: (query: Omit<EventQueryParams, "page[offset]" | "page[limit]">) => void;
 };
 
 type FilterFormValues = {
@@ -57,7 +57,6 @@ export function FilterPanel({ formatFilters, sortOptions, onSubmit }: FilterPane
     const format = data.format?.label;
     const sort = data.sort?.value;
     onSubmit({ format, sort, tag_id: tagIds.length > 0 ? tagIds : undefined });
-    reset();
   };
 
   return (
@@ -124,7 +123,7 @@ export function FilterPanel({ formatFilters, sortOptions, onSubmit }: FilterPane
           className="pill-btn"
           onClick={() => {
             reset();
-            onSubmit();
+            onSubmit({});
           }}
         >
           Reset

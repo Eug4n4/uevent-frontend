@@ -21,4 +21,13 @@ export interface ResponsePayload<Attr extends KnownAttributes, R extends KnownRe
 
 export interface ResponseArrayPayload<Attr extends KnownAttributes, R extends KnownRelationships = undefined> {
   data: Resource<Attr, R>[];
+  links: {
+    self: string;
+    first: string;
+    last: string;
+    next?: string;
+  };
+  meta?: {
+    total: number;
+  };
 }

@@ -1,7 +1,7 @@
 import { EventService } from "@/lib/services/EventService";
 import type { EventDto, EventQueryParams } from "@/lib/services/types/event.types";
 import Pagination from "@mui/material/Pagination";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { EventGrid } from "../components/sections/EventGrid";
 import { FilterPanel } from "../components/sections/FilterPanel";
 import { OrganizerShowcase } from "../components/sections/OrganizerShowcase";
@@ -45,10 +45,14 @@ const organizerSpotlights = [
   },
 ];
 
+const PAGE_LIMIT = 6;
+
 export function HomePage() {
   const [events, setEvents] = useState<EventDto[]>([]);
-
-  const getEvents = async (query: EventQueryParams | undefined) => {
+  const [filters, setFilters] = useState<Omit<EventQueryParams, "page[offset]" | "page[limit]">>({});
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const getEvents = async (query?: EventQueryParams) => {
     const events = await EventService.getAll(query);
     setEvents(
       events.data.map((event) => {
@@ -58,19 +62,35 @@ export function HomePage() {
         };
       }),
     );
+    setTotal(events.meta!.total);
   };
 
+  const buildQuery = useCallback((): EventQueryParams => {
+    return {
+      ...filters,
+      "page[offset]": (page - 1) * PAGE_LIMIT,
+      "page[limit]": PAGE_LIMIT,
+    };
+  }, [filters, page]);
+
   useEffect(() => {
-    getEvents();
-  }, []);
+    getEvents(buildQuery());
+  }, [filters, page, buildQuery]);
 
   return (
     <main className="landing">
-      <FilterPanel formatFilters={formatFilters} sortOptions={sortOptions} onSubmit={getEvents} />
+      <FilterPanel
+        formatFilters={formatFilters}
+        sortOptions={sortOptions}
+        onSubmit={(query) => {
+          setPage(1);
+          setFilters(query);
+        }}
+      />
 
       <EventGrid events={events} />
       <div className="pagination-container">
-        <Pagination count={20} onChange={(e) => console.log("page changed")} />
+        <Pagination page={page} count={Math.ceil(total / PAGE_LIMIT)} onChange={(_, page) => setPage(page)} />
       </div>
       <OrganizerShowcase spotlights={organizerSpotlights} />
     </main>
