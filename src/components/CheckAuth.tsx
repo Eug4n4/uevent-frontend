@@ -15,12 +15,16 @@ const CheckAuth = ({ children }: CheckAuthProps) => {
         const response = await ProfileService.getProfileWithAccount();
         dispatch(loginSuccess(response));
         return;
-      } catch (e) {
-        console.log(`CheckAuth: ${e?.name}: ${e?.message}`);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(`CheckAuth: ${error.name}: ${error.message}`);
+        } else {
+          console.log("CheckAuth: unexpected error", error);
+        }
       }
     };
     getMe();
-  }, []);
+  }, [dispatch]);
   return children;
 };
 

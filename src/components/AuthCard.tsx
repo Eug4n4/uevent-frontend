@@ -7,7 +7,7 @@ import {
 } from "@/lib/services/types/auth.types";
 import { loginSuccess } from "@/state/auth/auth.slice";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type BaseSyntheticEvent } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import PasswordInput from "./inputs/PasswordInput";
@@ -37,8 +37,8 @@ export function AuthCard({ mode, onModeChange }: AuthCardProps) {
   const [feedback, setFeedback] = useState<FeedbackState>({ status: "idle" });
   const [showNameOnLists, setShowNameOnLists] = useState(false);
 
-  const onSubmit = async (data: AuthDetails, event) => {
-    event.preventDefault();
+  const onSubmit = async (data: AuthDetails, event?: BaseSyntheticEvent) => {
+    event?.preventDefault();
 
     if (!isValid) {
       return;

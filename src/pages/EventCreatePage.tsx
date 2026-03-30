@@ -1,11 +1,11 @@
 import { useState } from "react";
+import { MapPreview } from "@/components/MapPreview";
 
 // подсказки чисто для презентации
 const hints = [
   "Poster upload optional — default art will be used otherwise",
   "Choose who sees attendees: everyone or confirmed visitors",
   "Pick a publication date (immediate or schedule ahead)",
-  "Promo codes are optional but nice to show in the demo",
   "Redirect URL is where buyers land after Stripe confirmation",
 ];
 
@@ -19,7 +19,7 @@ export function EventCreatePage() {
         <h2>All config knobs the backend asked for</h2>
         <p className="lead">
           This form is purely illustrative — it mirrors the required fields: posters, attendee visibility, publication
-          timing, promo codes, and redirect URL.
+          timing, and redirect URL.
         </p>
         <ul className="profile-task-list">
           {hints.map((hint) => (
@@ -70,22 +70,11 @@ export function EventCreatePage() {
             <span>Address</span>
             <input type="text" placeholder="Warehouse Pier, Gdansk" />
           </label>
-          <div className="map-placeholder">
-            <p>Google Maps picker placeholder</p>
-            <span>We will drop a map component here when the API key is ready.</span>
-          </div>
+          <MapPreview query="Warehouse Pier, Gdansk" />
         </fieldset>
 
         <fieldset>
-          <legend>Tickets & promos</legend>
-          <label>
-            <span>Base price</span>
-            <input type="number" placeholder="95" />
-          </label>
-          <label>
-            <span>Promo codes</span>
-            <textarea rows={3} placeholder="CALM20 - 20%\nFROST10 - 10%\nVIPFREE - 100%" />
-          </label>
+          <legend>Redirects</legend>
           <label>
             <span>Redirect URL after payment</span>
             <input type="url" placeholder="https://nice.app/thank-you" />

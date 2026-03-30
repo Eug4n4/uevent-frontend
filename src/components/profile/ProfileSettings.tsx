@@ -1,12 +1,15 @@
 import { AuthService } from "@/lib/services/AuthService";
 import { logout } from "@/state/auth/auth.slice";
 import type { IRootState } from "@/state/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const ProfileSettings = () => {
   const { user } = useSelector((state: IRootState) => state.auth);
-  const [avatar, setAvatar] = useState("https://placehold.co/160x160?text=nICE");
+  const [avatar, setAvatar] = useState(user?.avatar_url || "/favicon.svg");
+  useEffect(() => {
+    setAvatar(user?.avatar_url || "/favicon.svg");
+  }, [user?.avatar_url]);
   const dispatch = useDispatch();
 
   const handleLogout = async () => {
@@ -18,7 +21,7 @@ const ProfileSettings = () => {
     <>
       <h3>Settings</h3>
       <div className="avatar-block">
-        <img src={user?.avatar_url || "/favicon.svg"} alt="profile avatar" />
+        <img src={avatar} alt="profile avatar" />
         <button type="button" className="pill-btn" onClick={() => setAvatar("https://placehold.co/160x160?text=COOL")}>
           Upload placeholder
         </button>

@@ -87,14 +87,14 @@ export function EventCard({ event }: EventCardProps) {
       </div>
 
       <div className="organizer-stack">
-        <div className="organizer">
+        <Link to={`/company?view=public`} className="organizer link-reset">
           <img src={event.organizer.avatar} alt="" width={48} height={48} />
           <div>
             <strong>{event.organizer.name}</strong>
             <span>{event.organizer.handle}</span>
             <small>{event.subscriberCount}+ organizer followers</small>
           </div>
-        </div>
+        </Link>
 
         <div className="cta-stack">
           <Link to={`/events/${event.id}`} className="primary-btn ghost link-reset">

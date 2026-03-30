@@ -14,25 +14,12 @@ const categories = [
   "Community Labs",
 ];
 
-const highlights = [
-  { label: "Active organizers", value: "140+" },
-  { label: "Cities covered", value: "38" },
-  { label: "Avg. response time", value: "<4h" },
-];
-
 const formatFilters = ["All", "Conference", "Lecture", "Workshop", "Fest"];
 const themeFilters = ["All", "Business", "Politics", "Psychology", "Tech"];
 const sortOptions = [
   { label: "Soonest", value: "soonest" },
   { label: "By popularity", value: "popular" },
   { label: "By price", value: "price" },
-];
-
-const demoScenarios = [
-  "Filter by format and theme",
-  "Subscribe to an event and organizer",
-  "Mock Stripe flow + reminder emails",
-  "Company setup and event creation screen",
 ];
 
 // моковые карточки чисто для витрины, бэкенд потом подставит своё
@@ -154,8 +141,7 @@ const organizerSpotlights = [
 ];
 
 export function HomePage() {
-  // выбранный фильтр для текста, фактическая выдача прилетит с апи позже
-  const [category, setCategory] = useState(categories[0]);
+  const category = categories[0];
   const [formatFilter, setFormatFilter] = useState(formatFilters[0]);
   const [themeFilter, setThemeFilter] = useState(themeFilters[0]);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);

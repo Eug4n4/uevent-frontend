@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { MapPreview } from "@/components/MapPreview";
 
 // вся эта структура временная, ждём настоящие данные
 const eventDetail = {
@@ -19,6 +20,7 @@ const eventDetail = {
   visibility: "Visitor list open to everyone",
   mapHint: "Google Maps placeholder will render here",
   poster: "https://images.unsplash.com/photo-1475724017904-b712052c192a?auto=format&fit=crop&w=900&q=60",
+  availableTickets: 48,
 };
 
 const attendees = [
@@ -44,6 +46,9 @@ const organizer = {
 const similarEvents = ["Fintech 101", "Payments Sandbox", "Cold Outreach Camp"]; // пока просто всплывающие теги
 
 export function EventDetailPage() {
+  const ticketsAvailable = eventDetail.availableTickets ?? 0;
+  const ticketsEnabled = ticketsAvailable > 0;
+
   return (
     <main className="event-detail">
       <section className="story-panel detail-hero">
@@ -57,13 +62,24 @@ export function EventDetailPage() {
             <span>{eventDetail.visibility}</span>
           </div>
           <div className="detail-cta">
-            <Link to={`/events/${eventDetail.id}/checkout`} className="primary-btn link-reset">
-              Buy ticket
-            </Link>
+            {ticketsEnabled ? (
+              <Link to={`/events/${eventDetail.id}/checkout`} className="primary-btn link-reset">
+                Buy ticket
+              </Link>
+            ) : (
+              <button className="primary-btn" disabled>
+                Tickets coming soon
+              </button>
+            )}
             <button className="pill-btn">Follow organizer</button>
           </div>
           <p className="price-block">
             Ticket price: {eventDetail.price} · <span>{eventDetail.promoHint}</span>
+          </p>
+          <p className="muted">
+            {ticketsEnabled
+              ? `${ticketsAvailable} tickets currently available.`
+              : "Tickets are not yet configured by the organizer. Button stays disabled until they add ticket tiers."}
           </p>
           <p className="muted">
             Payment uses Stripe (mocked locally). After purchase the system emails the ticket and schedules reminders.
@@ -113,17 +129,16 @@ export function EventDetailPage() {
 
         <article>
           <h3>Map & venue</h3>
-          <div className="map-placeholder">
-            <p>{eventDetail.mapHint}</p>
-            <span>Google Maps component will be mounted here later.</span>
-          </div>
+          <MapPreview query={eventDetail.location} />
         </article>
       </section>
 
       <section className="detail-organizer">
         <div>
           <p className="eyebrow">Organizer</p>
-          <h3>{organizer.name}</h3>
+          <Link to="/company?view=public" className="link-reset">
+            <h3>{organizer.name}</h3>
+          </Link>
           <p>{organizer.bio}</p>
           <div className="chip-row">
             {organizer.otherEvents.map((ev) => (
