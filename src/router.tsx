@@ -16,6 +16,7 @@ import { EventCreatePage } from "./pages/EventCreatePage";
 import { EventDetailPage } from "./pages/EventDetailPage";
 import { HomePage } from "./pages/HomePage";
 import { UserProfilePage } from "./pages/UserProfilePage";
+import { CompanyTicketManagerPage } from "./pages/CompanyTicketManagerPage";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
           {
             path: "new",
             element: <CompanyCreatePage />,
+          },
+          {
+            path: "manage/tickets",
+            element: <CompanyTicketManagerPage />,
           },
         ],
       },

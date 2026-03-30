@@ -1,3 +1,6 @@
+import { Link, useSearchParams } from "react-router-dom";
+import { MapPreview } from "@/components/MapPreview";
+
 const company = {
   name: "Placeholder Ventures",
   mission: "Mock company page so бек может оценить структуру",
@@ -13,6 +16,9 @@ const companyEvents = [
 ];
 
 export function CompanyProfilePage() {
+  const [searchParams] = useSearchParams();
+  const isPublicView = searchParams.get("view") === "public";
+
   return (
     <main className="company-layout">
       <section className="story-panel">
@@ -28,9 +34,16 @@ export function CompanyProfilePage() {
           <button type="button" className="primary-btn">
             Follow company
           </button>
-          <button type="button" className="pill-btn logout-btn">
-            Log out
-          </button>
+          {!isPublicView && (
+            <>
+              <Link to="/companies/manage/tickets" className="pill-btn link-reset">
+                Manage tickets & promos
+              </Link>
+              <button type="button" className="pill-btn logout-btn">
+                Log out
+              </button>
+            </>
+          )}
         </div>
       </section>
 
@@ -47,9 +60,11 @@ export function CompanyProfilePage() {
             </li>
           ))}
         </ul>
-        <button type="button" className="primary-btn ghost">
-          Create new event
-        </button>
+        {!isPublicView && (
+          <button type="button" className="primary-btn ghost">
+            Create new event
+          </button>
+        )}
       </section>
 
       <section className="company-card">
@@ -57,10 +72,7 @@ export function CompanyProfilePage() {
         <p>Email: {company.email}</p>
         <p>Location: {company.location}</p>
         <p>Post-purchase redirect: {company.redirect}</p>
-        <div className="map-placeholder">
-          <p>Office map placeholder</p>
-          <span>Гугл мапс появится позже.</span>
-        </div>
+        <MapPreview query={company.location} />
       </section>
     </main>
   );

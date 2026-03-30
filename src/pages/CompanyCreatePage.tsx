@@ -1,3 +1,5 @@
+import { MapPreview } from "@/components/MapPreview";
+
 const checklist = [
   "Company name, email, location are required per spec",
   "Upload a logo/poster to use across events",
@@ -81,10 +83,7 @@ export function CompanyCreatePage() {
             <span>Address</span>
             <input type="text" placeholder="Fjord Street 12" />
           </label>
-          <div className="map-placeholder">
-            <p>Google Maps placeholder</p>
-            <span>We will drop the actual map picker here later.</span>
-          </div>
+          <MapPreview query="Fjord Street 12, Oslo" />
         </fieldset>
 
         <div className="form-actions">
