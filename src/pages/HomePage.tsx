@@ -56,14 +56,7 @@ export function HomePage() {
   useEffect(() => {
     const getEvents = async (query?: EventQueryParams) => {
       const events = await EventService.getAll(query);
-      setEvents(
-        events.data.map((event) => {
-          return {
-            id: event.id,
-            ...event.attributes,
-          };
-        }),
-      );
+      setEvents(events.data);
       syncFromLinks(events.links);
     };
     getEvents(buildQuery(filters));

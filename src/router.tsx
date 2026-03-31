@@ -54,11 +54,7 @@ const router = createBrowserRouter([
       },
       {
         path: "profile/:id",
-        element: (
-          <AuthRequired>
-            <UserProfilePage />
-          </AuthRequired>
-        ),
+        element: <UserProfilePage />,
         children: [
           {
             index: true,
@@ -66,27 +62,51 @@ const router = createBrowserRouter([
           },
           {
             path: "settings",
-            element: <ProfileSettings />,
+            element: (
+              <AuthRequired>
+                <ProfileSettings />,
+              </AuthRequired>
+            ),
           },
           {
             path: "tickets",
-            element: <ProfileTickets />,
+            element: (
+              <AuthRequired>
+                <ProfileTickets />,
+              </AuthRequired>
+            ),
           },
           {
             path: "subscriptions",
-            element: <ProfileSubscriptions />,
+            element: (
+              <AuthRequired>
+                <ProfileSubscriptions />,
+              </AuthRequired>
+            ),
           },
           {
             path: "notifications",
-            element: <ProfileNotifications />,
+            element: (
+              <AuthRequired>
+                <ProfileNotifications />,
+              </AuthRequired>
+            ),
           },
           {
             path: "events",
-            element: <ProfileEvents />,
+            element: (
+              <AuthRequired>
+                <ProfileEvents />,
+              </AuthRequired>
+            ),
           },
           {
             path: "companies",
-            element: <ProfileCompanies />,
+            element: (
+              <AuthRequired>
+                <ProfileCompanies />,
+              </AuthRequired>
+            ),
           },
         ],
       },

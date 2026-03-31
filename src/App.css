@@ -572,11 +572,14 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  transition: scale ease-out 0.15s;
 }
 
-.event-card.highlighted {
+.event-card:hover {
+  cursor: pointer;
   border-color: rgba(6, 182, 212, 0.6);
   box-shadow: rgba(6, 182, 212, 0.25) 0 20px 50px;
+  scale: 1.02;
 }
 
 .badge-row {

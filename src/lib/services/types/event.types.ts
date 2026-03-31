@@ -1,3 +1,5 @@
+import type { CompanyDto } from "./company.types";
+
 export interface EventAttributes {
   title: string;
   text: string;
@@ -7,7 +9,10 @@ export interface EventAttributes {
   publish_at: string;
   start_at: string;
   end_at: string;
+  company?: EventIncluded;
 }
+
+export interface EventIncluded extends CompanyDto {}
 
 export interface EventRelationships {
   company: {
@@ -33,7 +38,10 @@ export interface EventDto extends EventAttributes {
 export interface EventQueryParams {
   "page[offset]"?: number;
   "page[limit]"?: number;
+  published?: boolean[] | boolean;
+  company_id?: string;
   format?: string;
+  include?: string;
   tag_id?: string[];
   sort?: string;
 }

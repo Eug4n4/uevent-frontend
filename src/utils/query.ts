@@ -32,3 +32,12 @@ export const getPageFromUrl = (url: string) => {
 export const getTotalPages = (links: PaginationLinks) => {
   return getPageFromUrl(links.last);
 };
+
+export const formEndpointQueryString = (endpoint: string, query?: KnownQueryParams) => {
+  let params: URLSearchParams;
+  if (query) {
+    params = toUrlSearchParams(query);
+    endpoint += `?${params}`;
+  }
+  return endpoint;
+};

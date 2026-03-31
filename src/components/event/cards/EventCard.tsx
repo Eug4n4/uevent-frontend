@@ -1,6 +1,6 @@
 import type { EventDto } from "@/lib/services/types/event.types";
 import { toDateTimeString } from "@/utils/format.date";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export type EventPreview = {
   id: string;
@@ -36,28 +36,11 @@ type EventCardProps = {
   event: EventDto;
 };
 
-// const VIEWER_PLACEHOLDER = "HIDDEN";
-
 export function EventCard({ event }: EventCardProps) {
-  // const formattedDate = new Intl.DateTimeFormat("us", {
-  //   weekday: "short",
-  //   month: "short",
-  //   day: "numeric",
-  //   hour: "2-digit",
-  //   minute: "2-digit",
-  // }).format(new Date(event.datetime));
-
-  // const formattedPrice = event.isFree
-  //   ? "Free with RSVP"
-  //   : `${event.price.toLocaleString("en-US", {
-  //       style: "currency",
-  //       currency: event.currency,
-  //     })}`;
-
-  // const attendees = event.attendees.slice(0, 4);
+  const navigate = useNavigate();
 
   return (
-    <article className={"event-card"}>
+    <article className={"event-card"} onClick={() => navigate(`/events/${event.id}`)}>
       <div className="badge-row">
         <span>{event.format}</span>
         {/* <span>{event.theme}</span> */}
@@ -93,6 +76,13 @@ export function EventCard({ event }: EventCardProps) {
       </div>
 
       <div className="organizer-stack">
+        <div className="organizer">
+          <div>
+            <strong>Published by: {event.company?.name}</strong>
+            <br />
+            <small>At: {toDateTimeString(event.publish_at)}</small>
+          </div>
+        </div>
         {/* <div className="organizer">
           <img src={event.organizer.avatar} alt="" width={48} height={48} />
           <div>
@@ -102,14 +92,14 @@ export function EventCard({ event }: EventCardProps) {
           </div>
         </div> */}
 
-        <div className="cta-stack">
+        {/* <div className="cta-stack">
           <Link to={`/events/${event.id}`} className="primary-btn ghost link-reset">
             Subscribe to event
           </Link>
           <Link to={`/events/${event.id}`} className="pill-btn link-reset">
             Follow organizer alerts
           </Link>
-        </div>
+        </div> */}
       </div>
 
       {/* <div className="attendees-row">
