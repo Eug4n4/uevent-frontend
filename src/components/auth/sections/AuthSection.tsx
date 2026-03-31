@@ -1,7 +1,8 @@
-import { AuthCard } from "../AuthCard";
+import { AuthCard } from "../cards/AuthCard";
 
 type AuthSectionProps = {
   mode: "login" | "register";
+  // eslint-disable-next-line no-unused-vars
   onModeChange: (mode: "login" | "register") => void;
 };
 

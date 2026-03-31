@@ -5,7 +5,7 @@ import type { IRootState } from "@/state/store";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import UserAvatar from "../icons/UserAvatar";
+import UserAvatar from "../common/UserAvatar";
 
 import "@/assets/css/profile/profile.settings.css";
 import { ProfileService } from "@/lib/services/ProfileService";

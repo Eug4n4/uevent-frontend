@@ -1,5 +1,5 @@
 import type { EventDto } from "@/lib/services/types/event.types";
-import { EventCard } from "../EventCard";
+import { EventCard } from "../cards/EventCard";
 
 type EventGridProps = {
   events: EventDto[];

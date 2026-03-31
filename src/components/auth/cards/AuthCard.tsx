@@ -10,7 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState, type BaseSyntheticEvent } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import PasswordInput from "./inputs/PasswordInput";
+import { useNavigate } from "react-router-dom";
+import PasswordInput from "../../common/inputs/PasswordInput";
 
 type AuthCardProps = {
   mode: "login" | "register";
@@ -27,6 +28,7 @@ const passwordHint = "Use at least 6 characters mixing upper, lower, digits, and
 
 export function AuthCard({ mode, onModeChange }: AuthCardProps) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const resolver = useMemo(() => zodResolver(mode === "login" ? LoginAttributes : RegisterAttributes), [mode]);
   const {
     register,
@@ -60,8 +62,9 @@ export function AuthCard({ mode, onModeChange }: AuthCardProps) {
       reset();
       setFeedback({
         status: "success",
-        message: `Welcome back, ${JSON.stringify(response)}!`,
+        message: `Welcome back, ${response.username}!`,
       });
+      setTimeout(() => navigate("/"), 2000);
     }
   };
 

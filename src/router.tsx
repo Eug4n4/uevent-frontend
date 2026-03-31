@@ -7,16 +7,16 @@ import ProfileNotifications from "./components/profile/ProfileNotifications";
 import ProfileSettings from "./components/profile/ProfileSettings";
 import ProfileSubscriptions from "./components/profile/ProfileSubscriptions";
 import ProfileTickets from "./components/profile/ProfileTickets";
+import { EventCreatePage } from "./pages//event/EventCreatePage";
 import { AdminPage } from "./pages/AdminPage";
-import { AuthPage } from "./pages/AuthPage";
-import { CompanyCreatePage } from "./pages/CompanyCreatePage";
-import { CompanyProfilePage } from "./pages/CompanyProfilePage";
-import { EventCheckoutPage } from "./pages/EventCheckoutPage";
-import { EventCreatePage } from "./pages/EventCreatePage";
-import { EventDetailPage } from "./pages/EventDetailPage";
+import { AuthPage } from "./pages/auth/AuthPage";
+import { CompanyCreatePage } from "./pages/company/CompanyCreatePage";
+import { CompanyProfilePage } from "./pages/company/CompanyProfilePage";
+import { CompanyTicketManagerPage } from "./pages/company/CompanyTicketManagerPage";
+import { EventCheckoutPage } from "./pages/event/EventCheckoutPage";
+import { EventDetailPage } from "./pages/event/EventDetailPage";
 import { HomePage } from "./pages/HomePage";
-import { UserProfilePage } from "./pages/UserProfilePage";
-import { CompanyTicketManagerPage } from "./pages/CompanyTicketManagerPage";
+import { UserProfilePage } from "./pages/user/UserProfilePage";
 
 const router = createBrowserRouter([
   {

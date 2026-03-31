@@ -3,9 +3,9 @@ import { EventService } from "@/lib/services/EventService";
 import type { EventDto, EventQueryParams } from "@/lib/services/types/event.types";
 import Pagination from "@mui/material/Pagination";
 import { useEffect, useState } from "react";
-import { EventGrid } from "../components/sections/EventGrid";
-import { FilterPanel } from "../components/sections/FilterPanel";
-import { OrganizerShowcase } from "../components/sections/OrganizerShowcase";
+import { FilterPanel } from "../components/common/sections/FilterPanel";
+import { OrganizerShowcase } from "../components/common/sections/OrganizerShowcase";
+import { EventGrid } from "../components/event/sections/EventGrid";
 
 const formatFilters = [
   { label: "Lection", value: "lection" },
@@ -46,7 +46,7 @@ const organizerSpotlights = [
   },
 ];
 
-const PAGE_LIMIT = 2;
+const PAGE_LIMIT = 9;
 
 export function HomePage() {
   const [events, setEvents] = useState<EventDto[]>([]);
@@ -82,7 +82,7 @@ export function HomePage() {
 
       <EventGrid events={events} />
       <div className="pagination-container">
-        <Pagination page={page} count={total} onChange={(_, value) => setPage(value)} />
+        <Pagination page={page} count={total} onChange={(_, value) => setPage(value)} size="large" />
       </div>
       <OrganizerShowcase spotlights={organizerSpotlights} />
     </main>

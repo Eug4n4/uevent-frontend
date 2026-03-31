@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AuthCard } from "../../components/AuthCard";
+import { AuthCard } from "../../components/auth/cards/AuthCard";
 
 export function AuthPage() {
   const [mode, setMode] = useState<"login" | "register">("login");

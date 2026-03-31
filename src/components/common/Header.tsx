@@ -1,7 +1,7 @@
 import type { IRootState } from "@/state/store";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import UserAvatar from "./icons/UserAvatar";
+import UserAvatar from "./UserAvatar";
 
 const IceLogo = () => (
   <svg className="ice-logo" viewBox="0 0 96 120" role="img" aria-label="nICE ice cube mascot">

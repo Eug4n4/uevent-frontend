@@ -149,10 +149,10 @@ export function EventCard({ event }: EventCardProps) {
   );
 }
 
-function initials(name: string) {
-  return name
-    .split(" ")
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("")
-    .slice(0, 2);
-}
+// function initials(name: string) {
+//   return name
+//     .split(" ")
+//     .map((part) => part[0]?.toUpperCase() ?? "")
+//     .join("")
+//     .slice(0, 2);
+// }
