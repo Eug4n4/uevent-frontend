@@ -27,7 +27,4 @@ export interface ResponseArrayPayload<Attr extends KnownAttributes, R extends Kn
     last: string;
     next?: string;
   };
-  meta?: {
-    total: number;
-  };
 }

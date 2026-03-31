@@ -1,7 +1,8 @@
+import { usePagePagination } from "@/hooks/pagination";
 import { EventService } from "@/lib/services/EventService";
 import type { EventDto, EventQueryParams } from "@/lib/services/types/event.types";
 import Pagination from "@mui/material/Pagination";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { EventGrid } from "../components/sections/EventGrid";
 import { FilterPanel } from "../components/sections/FilterPanel";
 import { OrganizerShowcase } from "../components/sections/OrganizerShowcase";
@@ -45,37 +46,28 @@ const organizerSpotlights = [
   },
 ];
 
-const PAGE_LIMIT = 6;
+const PAGE_LIMIT = 2;
 
 export function HomePage() {
   const [events, setEvents] = useState<EventDto[]>([]);
+  const { page, setPage, total, syncFromLinks, buildQuery } = usePagePagination(PAGE_LIMIT);
   const [filters, setFilters] = useState<Omit<EventQueryParams, "page[offset]" | "page[limit]">>({});
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const getEvents = async (query?: EventQueryParams) => {
-    const events = await EventService.getAll(query);
-    setEvents(
-      events.data.map((event) => {
-        return {
-          id: event.id,
-          ...event.attributes,
-        };
-      }),
-    );
-    setTotal(events.meta!.total);
-  };
-
-  const buildQuery = useCallback((): EventQueryParams => {
-    return {
-      ...filters,
-      "page[offset]": (page - 1) * PAGE_LIMIT,
-      "page[limit]": PAGE_LIMIT,
-    };
-  }, [filters, page]);
 
   useEffect(() => {
-    getEvents(buildQuery());
-  }, [filters, page, buildQuery]);
+    const getEvents = async (query?: EventQueryParams) => {
+      const events = await EventService.getAll(query);
+      setEvents(
+        events.data.map((event) => {
+          return {
+            id: event.id,
+            ...event.attributes,
+          };
+        }),
+      );
+      syncFromLinks(events.links);
+    };
+    getEvents(buildQuery(filters));
+  }, [buildQuery, filters, syncFromLinks]);
 
   return (
     <main className="landing">
@@ -90,7 +82,7 @@ export function HomePage() {
 
       <EventGrid events={events} />
       <div className="pagination-container">
-        <Pagination page={page} count={Math.ceil(total / PAGE_LIMIT)} onChange={(_, page) => setPage(page)} />
+        <Pagination page={page} count={total} onChange={(_, value) => setPage(value)} />
       </div>
       <OrganizerShowcase spotlights={organizerSpotlights} />
     </main>

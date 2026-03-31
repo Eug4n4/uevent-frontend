@@ -12,3 +12,23 @@ export const toUrlSearchParams = (params: KnownQueryParams) => {
   });
   return query;
 };
+
+type PaginationLinks = {
+  self: string;
+  first: string;
+  last: string;
+  next?: string;
+  prev?: string;
+};
+
+export const getPageFromUrl = (url: string) => {
+  const parsed = new URL(url);
+  const offset = Number(parsed.searchParams.get("page[offset]") || 0);
+  const limit = Number(parsed.searchParams.get("page[limit]") || 1);
+
+  return Math.floor(offset / limit) + 1;
+};
+
+export const getTotalPages = (links: PaginationLinks) => {
+  return getPageFromUrl(links.last);
+};
