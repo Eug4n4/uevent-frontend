@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
+import { PaymentService } from "@/lib/services/payment.service";
 
 const ticketInfo = {
+  eventId: "ev-north",
   label: "General admission",
   description: ["Access to every panel", "Email reminders + QR pass"],
   price: 95,
@@ -11,6 +13,8 @@ const ticketInfo = {
 export function EventCheckoutPage() {
   const [quantity, setQuantity] = useState(1);
   const [promo, setPromo] = useState("");
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const total = useMemo(() => {
     return ticketInfo.price * quantity;
@@ -18,6 +22,26 @@ export function EventCheckoutPage() {
 
   const adjustQty = (delta: number) => {
     setQuantity((prev) => Math.max(1, prev + delta));
+  };
+
+  const handleCheckout = async () => {
+    setStatusMessage(null);
+    setLoading(true);
+    try {
+      const session = await PaymentService.createCheckoutSession({
+        eventId: ticketInfo.eventId,
+        quantity,
+        promoCode: promo || undefined,
+      });
+
+      setStatusMessage(
+        `Stripe session ready (${session.sessionId}). In the real integration we would redirect to Stripe checkout now.`,
+      );
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Unexpected error creating checkout session.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -100,9 +124,10 @@ export function EventCheckoutPage() {
           <span>Stripe placeholder</span>
           <div className="stripe-mock">Stripe Elements will render here. Пока просто заглушка.</div>
         </label>
-        <button type="button" className="primary-btn">
-          Continue to Stripe (mock)
+        <button type="button" className="primary-btn" onClick={handleCheckout} disabled={loading}>
+          {loading ? "Preparing checkout..." : "Continue to Stripe"}
         </button>
+        {statusMessage && <p className="feedback">{statusMessage}</p>}
       </section>
     </main>
   );
