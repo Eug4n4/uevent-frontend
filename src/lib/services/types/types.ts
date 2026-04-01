@@ -8,6 +8,7 @@ import type {
   EventQueryParams,
   EventRelationships,
 } from "./event.types";
+import type { NewsAttributes, NewsRelationships } from "./news.types";
 import type { TagAttributes, TagQueryParams, TagRelationships } from "./tag.types";
 
 export type ResourceLocation = {
@@ -21,8 +22,9 @@ type KnownAttributes =
   | TagAttributes
   | EventAttributes
   | EventCreateAttributes
-  | CompanyAttributes;
-type KnownRelationships = AccountRelationships | TagRelationships | EventRelationships | undefined;
+  | CompanyAttributes
+  | NewsAttributes;
+type KnownRelationships = AccountRelationships | TagRelationships | EventRelationships | NewsRelationships | undefined;
 type KnownIncluded = EventIncluded | undefined;
 type ResourceType = "account" | "profile" | "event" | "company" | "comment" | "tag";
 export type KnownQueryParams = TagQueryParams | EventQueryParams | CompanyQueryParams;

@@ -5,11 +5,10 @@ export interface CompanyAttributes {
   email: string;
   address: string;
   banner_url: string;
-}
-
-export interface CompanyCreateAttributes extends Omit<CompanyAttributes, "banner_url"> {
   location: ResourceLocation;
 }
+
+export interface CompanyCreateAttributes extends Omit<CompanyAttributes, "banner_url"> {}
 
 export interface CompanyDto extends CompanyAttributes {
   id: string;

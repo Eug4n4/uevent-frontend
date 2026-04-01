@@ -28,4 +28,9 @@ export class CompanyService {
     );
     return response.data;
   }
+
+  static async getById(id: string) {
+    const response = await api.get<ResponsePayload<CompanyAttributes>>(`${CompanyService.endpoint}/${id}`);
+    return response.data;
+  }
 }

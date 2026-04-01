@@ -7,12 +7,14 @@ import ProfileNotifications from "./components/profile/ProfileNotifications";
 import ProfileSettings from "./components/profile/ProfileSettings";
 import ProfileSubscriptions from "./components/profile/ProfileSubscriptions";
 import ProfileTickets from "./components/profile/ProfileTickets";
+import { CompanyService } from "./lib/services/CompanyService";
 import { EventCreatePage } from "./pages//event/EventCreatePage";
 import { AdminPage } from "./pages/AdminPage";
 import { AuthPage } from "./pages/auth/AuthPage";
 import { CompanyCreatePage } from "./pages/company/CompanyCreatePage";
 import { CompanyProfilePage } from "./pages/company/CompanyProfilePage";
 import { CompanyTicketManagerPage } from "./pages/company/CompanyTicketManagerPage";
+import { NewsCreatePage } from "./pages/company/news/NewsCreatePage";
 import { EventCheckoutPage } from "./pages/event/EventCheckoutPage";
 import { EventDetailPage } from "./pages/event/EventDetailPage";
 import { HomePage } from "./pages/HomePage";
@@ -36,8 +38,15 @@ const router = createBrowserRouter([
         element: <AdminPage />,
       },
       {
-        path: "company",
+        path: "company/:id",
         element: <CompanyProfilePage />,
+        loader: async ({ params }) => {
+          return await CompanyService.getById(params.id as string);
+        },
+      },
+      {
+        path: "company/:id/news",
+        element: <NewsCreatePage />,
       },
       {
         path: "companies",

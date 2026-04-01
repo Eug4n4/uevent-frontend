@@ -1,14 +1,6 @@
-import { Link, useSearchParams } from "react-router-dom";
 import { MapPreview } from "@/components/MapPreview";
-
-const company = {
-  name: "Placeholder Ventures",
-  mission: "Mock company page so бек может оценить структуру",
-  followers: "1.3K",
-  email: "team@placeholder.co",
-  location: "Oslo, Norway",
-  redirect: "https://nice.app/mock-company",
-};
+import { CompanyService } from "@/lib/services/CompanyService";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 const companyEvents = [
   { title: "YabiYada Fintech Catchup", date: "12 Feb 2025", status: "Live" },
@@ -16,39 +8,32 @@ const companyEvents = [
 ];
 
 export function CompanyProfilePage() {
-  const [searchParams] = useSearchParams();
-  const isPublicView = searchParams.get("view") === "public";
+  const { data: company } = useLoaderData<typeof CompanyService.getById>();
+  const navigate = useNavigate();
 
   return (
     <main className="company-layout">
       <section className="story-panel">
         <p className="eyebrow">Company profile</p>
-        <h2>{company.name}</h2>
-        <p className="lead">{company.mission}</p>
-        <div className="company-meta">
-          <span>{company.followers} followers</span>
-          <span>{company.location}</span>
-          <span>{company.email}</span>
-        </div>
-        <div className="detail-cta">
-          <button type="button" className="primary-btn">
-            Follow company
-          </button>
-          {!isPublicView && (
-            <>
-              <Link to="/companies/manage/tickets" className="pill-btn link-reset">
-                Manage tickets & promos
-              </Link>
-              <button type="button" className="pill-btn logout-btn">
-                Log out
-              </button>
-            </>
-          )}
-        </div>
+        <h2>{company.attributes.name}</h2>
+        <section className="company-card">
+          <h3>Contact information</h3>
+          <p>Email: {company.attributes.email}</p>
+          <p>Location: {company.attributes.address}</p>
+
+          <MapPreview
+            position={{ lat: company.attributes.location.latitude, lng: company.attributes.location.longitude }}
+          />
+        </section>
       </section>
 
       <section className="company-card">
-        <h3>Events by this company</h3>
+        <div className="header">
+          <h3>Company news</h3>
+          <button type="button" className="primary-btn ghost" onClick={() => navigate("news")}>
+            Create news
+          </button>
+        </div>
         <ul className="subscription-list">
           {companyEvents.map((event) => (
             <li key={event.title}>
@@ -60,20 +45,17 @@ export function CompanyProfilePage() {
             </li>
           ))}
         </ul>
-        {!isPublicView && (
-          <button type="button" className="primary-btn ghost">
-            Create new event
-          </button>
-        )}
       </section>
 
-      <section className="company-card">
-        <h3>Contact & redirects</h3>
-        <p>Email: {company.email}</p>
-        <p>Location: {company.location}</p>
-        <p>Post-purchase redirect: {company.redirect}</p>
-        <MapPreview query={company.location} />
-      </section>
+      {/* <section className="company-card">
+        <h3>Contact information</h3>
+        <p>Email: {company.attributes.email}</p>
+        <p>Location: {company.attributes.address}</p>
+
+        <MapPreview
+          position={{ lat: company.attributes.location.latitude, lng: company.attributes.location.longitude }}
+        />
+      </section> */}
     </main>
   );
 }

@@ -2,12 +2,14 @@ import { useMyCompanies } from "@/hooks/companies";
 import { usePagePagination } from "@/hooks/pagination";
 import Pagination from "@mui/material/Pagination";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const PAGE_LIMIT = 3;
 
 const ProfileCompanies = () => {
   const { companies, fetchCompanies } = useMyCompanies();
   const { page, setPage, total, syncFromLinks, buildQuery } = usePagePagination(PAGE_LIMIT);
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -24,7 +26,7 @@ const ProfileCompanies = () => {
     return (
       <>
         {companies.map((company) => (
-          <article className="event-card" key={company.id}>
+          <article className="event-card" key={company.id} onClick={() => navigate(`/company/${company.id}`)}>
             <div className="card-head">
               <div>
                 <h3>{company.name}</h3>
