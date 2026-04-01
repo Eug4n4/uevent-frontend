@@ -5,7 +5,7 @@ import { Autocomplete, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-type EventFormat = {
+export type EventFormat = {
   label: string;
   value: string;
 };

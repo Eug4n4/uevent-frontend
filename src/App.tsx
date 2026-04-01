@@ -1,3 +1,4 @@
+import { APIProvider } from "@vis.gl/react-google-maps";
 import { Outlet } from "react-router-dom";
 import "./App.css";
 import CheckAuth from "./components/CheckAuth";
@@ -11,7 +12,9 @@ function App() {
       <CheckAuth>
         <Header />
       </CheckAuth>
-      <Outlet />
+      <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+        <Outlet />
+      </APIProvider>
     </div>
   );
 }

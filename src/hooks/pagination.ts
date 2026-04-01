@@ -1,7 +1,7 @@
 import { getPageFromUrl, getTotalPages } from "@/utils/query";
 import { useCallback, useState } from "react";
 
-type PaginationLinks = {
+export type PaginationLinks = {
   self: string;
   first: string;
   last: string;

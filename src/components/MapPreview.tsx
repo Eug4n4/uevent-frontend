@@ -1,27 +1,39 @@
+import { AdvancedMarker, Map, useMap } from "@vis.gl/react-google-maps";
+import { useEffect } from "react";
+import type { PlaceLocation } from "./common/inputs/PlacesAutocomplete";
+/// <reference types="@types/google.maps" />
 type MapPreviewProps = {
-  query: string
-  zoom?: number
-  height?: number
+  zoom?: number;
+  height?: number;
+  position?: PlaceLocation;
+};
+
+type RecenterProps = Pick<MapPreviewProps, "position">;
+
+function Recenter({ position }: RecenterProps) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (map && position) {
+      map.panTo(position);
+    }
+  }, [map, position]);
+
+  return position ? <AdvancedMarker position={position} /> : null;
 }
 
-export function MapPreview({ query, zoom = 14, height = 180 }: MapPreviewProps) {
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-  const encodedQuery = encodeURIComponent(query)
-
-  if (!apiKey) {
-    return (
-      <div className="map-placeholder" style={{ minHeight: `${height}px` }}>
-        <p>Map preview</p>
-        <span>Provide VITE_GOOGLE_MAPS_API_KEY to render Google Maps.</span>
-      </div>
-    )
-  }
-
-  const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${encodedQuery}&zoom=${zoom}&size=640x360&scale=2&maptype=roadmap&markers=color:0x0ea5e9%7C${encodedQuery}&key=${apiKey}`
-
+export function MapPreview({ position, height = 300 }: MapPreviewProps) {
   return (
-    <div className="map-placeholder" style={{ minHeight: `${height}px` }}>
-      <img src={mapUrl} alt={`Map preview for ${query}`} loading="lazy" />
+    <div style={{ height: `${height}px` }}>
+      <Map
+        defaultZoom={9}
+        defaultCenter={{ lat: 43.45, lng: -80.5 }}
+        gestureHandling={"greedy"}
+        disableDefaultUI={true}
+        mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
+      >
+        <Recenter position={position} />
+      </Map>
     </div>
-  )
+  );
 }

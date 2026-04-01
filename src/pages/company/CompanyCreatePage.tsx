@@ -1,4 +1,7 @@
+import type { PlaceLocation } from "@/components/common/inputs/PlacesAutocomplete";
+import PlacesAutocomplete from "@/components/common/inputs/PlacesAutocomplete";
 import { MapPreview } from "@/components/MapPreview";
+import { useState } from "react";
 
 const checklist = [
   "Company name, email, location are required per spec",
@@ -7,6 +10,8 @@ const checklist = [
 ];
 
 export function CompanyCreatePage() {
+  const [selectedPlace, setSelectedPlace] = useState<PlaceLocation>();
+
   return (
     <main className="create-layout">
       <section className="story-panel">
@@ -79,11 +84,8 @@ export function CompanyCreatePage() {
 
         <fieldset>
           <legend>Office location</legend>
-          <label>
-            <span>Address</span>
-            <input type="text" placeholder="Fjord Street 12" />
-          </label>
-          <MapPreview query="Fjord Street 12, Oslo" />
+          <PlacesAutocomplete onSelected={(location) => setSelectedPlace(location)} />
+          <MapPreview position={selectedPlace} />
         </fieldset>
 
         <div className="form-actions">

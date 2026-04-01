@@ -115,7 +115,11 @@ const router = createBrowserRouter([
         children: [
           {
             path: "new",
-            element: <EventCreatePage />,
+            element: (
+              <AuthRequired>
+                <EventCreatePage />,
+              </AuthRequired>
+            ),
           },
           {
             path: ":eventId",

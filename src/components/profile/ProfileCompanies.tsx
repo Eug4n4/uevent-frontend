@@ -1,13 +1,12 @@
+import { useMyCompanies } from "@/hooks/companies";
 import { usePagePagination } from "@/hooks/pagination";
-import { CompanyService } from "@/lib/services/CompanyService";
-import type { CompanyDto, CompanyQueryParams } from "@/lib/services/types/company.types";
 import Pagination from "@mui/material/Pagination";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const PAGE_LIMIT = 3;
 
 const ProfileCompanies = () => {
-  const [companies, setCompanies] = useState<CompanyDto[]>();
+  const { companies, fetchCompanies } = useMyCompanies();
   const { page, setPage, total, syncFromLinks, buildQuery } = usePagePagination(PAGE_LIMIT);
 
   useEffect(() => {
@@ -15,20 +14,8 @@ const ProfileCompanies = () => {
   });
 
   useEffect(() => {
-    const getCompanies = async (query?: CompanyQueryParams) => {
-      const companies = await CompanyService.getMy(query);
-      setCompanies(
-        companies.data.map((company) => {
-          return {
-            id: company.id,
-            ...company.attributes,
-          };
-        }),
-      );
-      syncFromLinks(companies.links);
-    };
-    getCompanies(buildQuery({ me: true }));
-  }, [buildQuery, syncFromLinks]);
+    fetchCompanies({ query: buildQuery({ me: true }), syncFromLinks });
+  }, [buildQuery, syncFromLinks, fetchCompanies]);
 
   const getMyCompanies = () => {
     if (companies === undefined || companies.length === 0) {
