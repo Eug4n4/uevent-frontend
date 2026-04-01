@@ -1,6 +1,7 @@
+import { formEndpointQueryString } from "@/utils/query";
 import { api } from "../api";
-import type { NewsAttributes, NewsRelationships } from "./types/news.types";
-import type { ResponsePayload } from "./types/types";
+import type { NewsAttributes, NewsQuery, NewsRelationships } from "./types/news.types";
+import type { ResponseArrayPayload, ResponsePayload } from "./types/types";
 
 export class NewsService {
   static endpoint = "news";
@@ -20,6 +21,13 @@ export class NewsService {
       },
     };
     const response = await api.post<ResponsePayload<NewsAttributes, NewsRelationships>>(NewsService.endpoint, request);
+    return response.data;
+  }
+
+  static async getAll(query?: NewsQuery) {
+    const response = await api.get<ResponseArrayPayload<NewsAttributes, NewsRelationships>>(
+      formEndpointQueryString(NewsService.endpoint, query),
+    );
     return response.data;
   }
 }

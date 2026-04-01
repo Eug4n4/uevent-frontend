@@ -1,6 +1,7 @@
 import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import AuthRequired from "./components/AuthRequired";
+import { CheckCompanyOwner } from "./components/CheckCompanyOwner";
 import ProfileCompanies from "./components/profile/ProfileCompanies";
 import ProfileEvents from "./components/profile/ProfileEvents";
 import ProfileNotifications from "./components/profile/ProfileNotifications";
@@ -46,7 +47,13 @@ const router = createBrowserRouter([
       },
       {
         path: "company/:id/news",
-        element: <NewsCreatePage />,
+        element: (
+          <AuthRequired>
+            <CheckCompanyOwner>
+              <NewsCreatePage />,
+            </CheckCompanyOwner>
+          </AuthRequired>
+        ),
       },
       {
         path: "companies",

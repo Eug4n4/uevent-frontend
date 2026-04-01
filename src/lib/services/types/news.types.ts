@@ -13,3 +13,14 @@ export interface NewsRelationships {
   };
 }
 export type NewsAttributes = z.infer<typeof newsAttributesSchema>;
+
+export interface NewsDto extends NewsAttributes {
+  id: string;
+  created_at: string;
+}
+
+export interface NewsQuery {
+  "page[offset]"?: number;
+  "page[limit]"?: number;
+  company_id?: string;
+}

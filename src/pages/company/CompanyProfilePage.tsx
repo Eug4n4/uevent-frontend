@@ -1,15 +1,24 @@
 import { MapPreview } from "@/components/MapPreview";
+import { useNews } from "@/hooks/news";
+import { usePagePagination } from "@/hooks/pagination";
 import { CompanyService } from "@/lib/services/CompanyService";
+import { toDateTimeString } from "@/utils/format.date";
+import Pagination from "@mui/material/Pagination";
+import { useEffect } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 
-const companyEvents = [
-  { title: "YabiYada Fintech Catchup", date: "12 Feb 2025", status: "Live" },
-  { title: "Private Board Dinner", date: "28 Feb 2025", status: "Scheduled" },
-];
+const PAGE_LIMIT = 3;
 
 export function CompanyProfilePage() {
   const { data: company } = useLoaderData<typeof CompanyService.getById>();
+  const { page, setPage, total, syncFromLinks, buildQuery } = usePagePagination(PAGE_LIMIT);
+
+  const { news, fetchNews } = useNews();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchNews({ query: buildQuery({ company_id: company.id }), syncFromLinks });
+  }, [fetchNews, buildQuery, syncFromLinks, company.id]);
 
   return (
     <main className="company-layout">
@@ -35,27 +44,20 @@ export function CompanyProfilePage() {
           </button>
         </div>
         <ul className="subscription-list">
-          {companyEvents.map((event) => (
-            <li key={event.title}>
+          {news.map((value) => (
+            <li key={value.id}>
               <div>
-                <strong>{event.title}</strong>
-                <span>{event.date}</span>
+                <strong>{value.name}</strong>
+                <p>{value.text}</p>
               </div>
-              <span className="badge">{event.status}</span>
+              <span>Created at: {toDateTimeString(value.created_at)}</span>
             </li>
           ))}
         </ul>
+        <div className="pagination-container">
+          <Pagination page={page} count={total} onChange={(_, value) => setPage(value)} size="large" />
+        </div>
       </section>
-
-      {/* <section className="company-card">
-        <h3>Contact information</h3>
-        <p>Email: {company.attributes.email}</p>
-        <p>Location: {company.attributes.address}</p>
-
-        <MapPreview
-          position={{ lat: company.attributes.location.latitude, lng: company.attributes.location.longitude }}
-        />
-      </section> */}
     </main>
   );
 }

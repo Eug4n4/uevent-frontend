@@ -11,6 +11,7 @@ type FetchCompaniesProps = {
 
 export const useMyCompanies = () => {
   const [companies, setCompanies] = useState<CompanyDto[]>([]);
+  const [isLoading, setLoading] = useState(true);
 
   const fetchCompanies = useCallback(async ({ query, syncFromLinks }: FetchCompaniesProps) => {
     const companies = await CompanyService.getMy(query);
@@ -23,9 +24,11 @@ export const useMyCompanies = () => {
       }),
     );
     syncFromLinks?.(companies.links);
+    setLoading(false);
   }, []);
   return {
     companies,
     fetchCompanies,
+    isLoading,
   };
 };
