@@ -1,26 +1,70 @@
 import type { PlaceLocation } from "@/components/common/inputs/PlacesAutocomplete";
 import PlacesAutocomplete from "@/components/common/inputs/PlacesAutocomplete";
 import { MapPreview } from "@/components/MapPreview";
-import { useState } from "react";
+import { CompanyService } from "@/lib/services/CompanyService";
+import type { CompanyCreateAttributes } from "@/lib/services/types/company.types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import z from "zod";
 
-const checklist = [
-  "Company name, email, location are required per spec",
-  "Upload a logo/poster to use across events",
-  "Plan redirect URL for event buyers",
-];
+const checklist = ["Company name, email, location are required", "Upload a logo/poster to use across events"];
+
+const companyCreateSchema = z.object({
+  name: z.string().min(5, { error: "Name is too short" }).max(50, { error: "Name is too long" }),
+  email: z.email({ error: "Invalid email" }),
+  address: z.string({ error: "Address is required" }),
+  location: z.object({
+    lat: z.number(),
+    lng: z.number(),
+  }),
+  banner: z.optional(z.instanceof(FileList)),
+});
+
+type CompanyCreate = z.infer<typeof companyCreateSchema>;
 
 export function CompanyCreatePage() {
   const [selectedPlace, setSelectedPlace] = useState<PlaceLocation>();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    reset,
+    register,
+    setValue,
+    watch,
+  } = useForm<CompanyCreate>({ resolver: zodResolver(companyCreateSchema), mode: "all" });
+  const { ref, ...fields } = register("banner");
+  const banner = watch("banner");
+  const fileName = banner?.item(0)?.name;
+
+  const onSubmit = async (data: CompanyCreate) => {
+    const attributes: CompanyCreateAttributes = {
+      ...data,
+      location: {
+        latitude: data.location.lat,
+        longitude: data.location.lng,
+      },
+    };
+    try {
+      const company = await CompanyService.create(attributes);
+      let file: File | null | undefined | Blob = data.banner?.item(0);
+      if (!file) {
+        file = await fetch("/favicon.svg").then((response) => response.blob());
+      }
+      await CompanyService.uploadBanner(file!, company.data.id);
+      reset();
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <main className="create-layout">
       <section className="story-panel">
         <p className="eyebrow">Create company</p>
-        <h2>Your brand space for events</h2>
-        <p className="lead">
-          This mock form mirrors every field backend teammates expect: legal info, contact, and redirect links. Replace
-          with real data once APIs are wired.
-        </p>
+        <h2>It is the place where company is created!</h2>
         <ul className="profile-task-list">
           {checklist.map((item) => (
             <li key={item}>{item}</li>
@@ -28,72 +72,68 @@ export function CompanyCreatePage() {
         </ul>
       </section>
 
-      <form className="create-form">
-        {/* форма-заготовка, чтоб показать все поля */}
+      <form className="create-form" onSubmit={handleSubmit(onSubmit)}>
         <fieldset>
           <legend>Company basics</legend>
-          <label>
-            <span>Company name</span>
-            <input type="text" placeholder="Placeholder Ventures" />
+          <label className="create-form-label">
+            <span>Name:</span>
+            <input type="text" placeholder="Placeholder Ventures" {...register("name")} />
+            {errors.name && <small>{errors.name.message}</small>}
           </label>
-          <label>
-            <span>Public tagline</span>
-            <input type="text" placeholder="Hybrid events for curious people" />
-          </label>
-          <label>
-            <span>Contact email</span>
-            <input type="email" placeholder="founders@placeholder.co" />
-          </label>
-          <label>
-            <span>Location / HQ</span>
-            <input type="text" placeholder="Oslo, Norway" />
-          </label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Description</legend>
-          <label>
-            <span>About the company</span>
-            <textarea rows={4} placeholder="Share a short mission statement for the profile page." />
-          </label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Links & redirect</legend>
-          <label>
-            <span>Website</span>
-            <input type="url" placeholder="https://nice.app" />
-          </label>
-          <label>
-            <span>Redirect URL after ticket purchase</span>
-            <input type="url" placeholder="https://nice.app/thanks" />
-          </label>
-          <label>
-            <span>Support / helpdesk link</span>
-            <input type="url" placeholder="https://help.nice.app" />
+          <label className="create-form-label">
+            <span>Contact email:</span>
+            <input type="email" placeholder="founders@placeholder.co" {...register("email")} />
+            {errors.email && <small>{errors.email.message}</small>}
           </label>
         </fieldset>
 
         <fieldset>
           <legend>Branding</legend>
-          <div className="upload-drop">
-            <p>Upload company logo / poster</p>
-            <small>PNG/SVG preferred. Optional — default ice cube mascot otherwise.</small>
+          <input
+            style={{ display: "none" }}
+            type="file"
+            accept="image/*"
+            {...fields}
+            ref={(instance) => {
+              ref(instance);
+              inputRef.current = instance;
+            }}
+          />
+          <div className="upload-drop" onClick={() => inputRef.current?.click()}>
+            {!fileName && <p>Upload company logo / poster</p>}
+            <small>
+              {fileName ? `Selected: ${fileName}` : "PNG/SVG preferred. Optional — default ice cube mascot otherwise."}
+            </small>
           </div>
         </fieldset>
 
         <fieldset>
           <legend>Office location</legend>
-          <PlacesAutocomplete onSelected={(location) => setSelectedPlace(location)} />
+          <label className="create-form-label">
+            <Controller
+              name="address"
+              control={control}
+              render={({ field }) => (
+                <PlacesAutocomplete
+                  address={field.value}
+                  onChange={(address) => field.onChange(address)}
+                  onSelected={(location, address) => {
+                    field.onChange(address);
+                    setValue("location", location);
+                    setSelectedPlace(location);
+                  }}
+                />
+              )}
+            ></Controller>
+            {errors.address && <small>{errors.address.message}</small>}
+          </label>
+
           <MapPreview position={selectedPlace} />
         </fieldset>
 
         <div className="form-actions">
-          <button type="button" className="pill-btn">
-            Save draft
-          </button>
           <button type="submit" className="primary-btn">
-            Publish company profile
+            Create company
           </button>
         </div>
       </form>

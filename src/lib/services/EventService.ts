@@ -9,6 +9,7 @@ import type {
   EventRelationships,
 } from "./types/event.types";
 import type { RequestPayload, ResponseArrayPayload, ResponsePayload } from "./types/types";
+import { uploadFile } from "./utils";
 
 export class EventService {
   static endpoint = "events";
@@ -19,9 +20,7 @@ export class EventService {
   }
 
   static async uploadBanner(id: string, file: Blob) {
-    const formData = new FormData();
-    formData.append("banner", file);
-    await api.post(`${EventService.endpoint}/${id}/banner`, formData);
+    return uploadFile(file, `${EventService.endpoint}/${id}/banner`);
   }
 
   static async getAll(query?: EventQueryParams) {

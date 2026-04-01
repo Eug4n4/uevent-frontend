@@ -44,7 +44,11 @@ const router = createBrowserRouter([
         children: [
           {
             path: "new",
-            element: <CompanyCreatePage />,
+            element: (
+              <AuthRequired>
+                <CompanyCreatePage />,
+              </AuthRequired>
+            ),
           },
           {
             path: "manage/tickets",
