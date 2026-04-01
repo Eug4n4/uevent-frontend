@@ -1,4 +1,5 @@
 import type { CompanyDto } from "./company.types";
+import type { ResourceLocation } from "./types";
 
 export interface EventAttributes {
   title: string;
@@ -12,6 +13,11 @@ export interface EventAttributes {
   company?: EventIncluded;
 }
 
+export interface EventCreateAttributes extends Omit<EventAttributes, "banner_url" | "company" | "status"> {
+  location: ResourceLocation;
+  visitors_visibility: "everyone" | "staff_and_visitors";
+}
+
 export interface EventIncluded extends CompanyDto {}
 
 export interface EventRelationships {
@@ -22,12 +28,10 @@ export interface EventRelationships {
     };
   };
   tags?: {
-    data: [
-      {
-        id: string;
-        type: "tag";
-      },
-    ];
+    data: {
+      id: string;
+      type: "tag";
+    }[];
   };
 }
 

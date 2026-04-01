@@ -617,6 +617,9 @@
 .poster-thumb {
   border-radius: 20px;
   object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-position: center;
   box-shadow: rgba(6, 182, 212, 0.25) 0 10px 30px;
 }
 

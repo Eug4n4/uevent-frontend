@@ -1,11 +1,44 @@
 import { formEndpointQueryString } from "@/utils/query";
 import { api } from "../api";
 import type { CompanyAttributes } from "./types/company.types";
-import type { EventAttributes, EventDto, EventQueryParams, EventRelationships } from "./types/event.types";
-import type { ResponseArrayPayload } from "./types/types";
+import type {
+  EventAttributes,
+  EventCreateAttributes,
+  EventDto,
+  EventQueryParams,
+  EventRelationships,
+} from "./types/event.types";
+import type { RequestPayload, ResponseArrayPayload, ResponsePayload } from "./types/types";
 
 export class EventService {
   static endpoint = "events";
+
+  static async create(payload: RequestPayload<EventCreateAttributes, EventRelationships>) {
+    const response = await api.post<ResponsePayload<EventAttributes>>(EventService.endpoint, payload);
+    return response.data;
+  }
+
+  static async uploadBanner(id: string, file: Blob) {
+    const formData = new FormData();
+    formData.append("banner", file);
+    await api.post(`${EventService.endpoint}/${id}/banner`, formData);
+  }
+
+  static async getAll(query?: EventQueryParams) {
+    this.includeCompanies(query);
+    const response = await api.get<ResponseArrayPayload<EventAttributes, EventRelationships>>(
+      formEndpointQueryString(EventService.endpoint, query),
+    );
+    return this.toDto(response.data);
+  }
+
+  static async getMy(query?: EventQueryParams) {
+    this.includeCompanies(query);
+    const response = await api.get<ResponseArrayPayload<EventAttributes, EventRelationships>>(
+      formEndpointQueryString(EventService.endpoint, query),
+    );
+    return this.toDto(response.data);
+  }
 
   static includeCompanies(query?: EventQueryParams) {
     if (query) {
@@ -33,21 +66,5 @@ export class EventService {
       }
     }
     return { data: newEvents, links: events.links, included: events.included };
-  }
-
-  static async getAll(query?: EventQueryParams) {
-    this.includeCompanies(query);
-    const response = await api.get<ResponseArrayPayload<EventAttributes, EventRelationships>>(
-      formEndpointQueryString(EventService.endpoint, query),
-    );
-    return this.toDto(response.data);
-  }
-
-  static async getMy(query?: EventQueryParams) {
-    this.includeCompanies(query);
-    const response = await api.get<ResponseArrayPayload<EventAttributes, EventRelationships>>(
-      formEndpointQueryString(EventService.endpoint, query),
-    );
-    return this.toDto(response.data);
   }
 }

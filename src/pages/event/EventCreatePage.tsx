@@ -3,18 +3,18 @@ import PlacesAutocomplete, { type PlaceLocation } from "@/components/common/inpu
 import type { EventFormat } from "@/components/common/sections/FilterPanel";
 import { useMyCompanies } from "@/hooks/companies";
 import useTags from "@/hooks/tags";
+import { EventService } from "@/lib/services/EventService";
 import type { CompanyDto } from "@/lib/services/types/company.types";
+import type { EventRelationships } from "@/lib/services/types/event.types";
 import type { TagDto } from "@/lib/services/types/tag.types";
 import { Autocomplete, TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-// подсказки чисто для презентации
 const hints = [
   "Poster upload optional — default art will be used otherwise",
   "Choose who sees attendees: everyone or confirmed visitors",
-  "Pick a publication date (immediate or schedule ahead)",
-  "Redirect URL is where buyers land after Stripe confirmation",
+  "Pick a publication date",
 ];
 
 const formatFilters = [
@@ -29,64 +29,16 @@ type EventFormValues = {
   tags?: TagDto[];
   title: string;
   text: string;
-  start_at?: string;
-  end_at?: string;
-  publish_at?: string;
+  start_at: string;
+  end_at: string;
+  publish_at: string;
   address: string;
   location: PlaceLocation;
   banner?: FileList;
-  visibility?: "everyone" | "attendees";
+  visibility?: "everyone" | "staff_and_visitors";
+  notification_new_tickets: boolean;
   company: CompanyDto | null;
 };
-
-// const eventCreateSchema = z.object({
-//   title: z.string().min(3, { error: "Title is too short" }),
-//   text: z.string().min(10, { error: "Description is too short" }),
-//   format: z.object(
-//     {
-//       label: z.string(),
-//       value: z.string(),
-//     },
-//     { error: "Format is required" },
-//   ),
-//   tags: z
-//     .array(
-//       z.object(
-//         {
-//           id: z.string(),
-//           name: z.string(),
-//           description: z.optional(z.string()),
-//         },
-//         { error: "Tags must be an array" },
-//       ),
-//     )
-//     .nullable(),
-//   company: z.object(
-//     {
-//       id: z.string(),
-//       name: z.string(),
-//       email: z.string(),
-//       address: z.string(),
-//       banner_url: z.string(),
-//     },
-//     { error: "Company is required" },
-//   ),
-//   start_at: z.string({ error: "Start at is required" }),
-//   end_at: z.string({ error: "End at is required" }),
-//   publish_at: z.string({ error: "Publish at is required" }),
-//   address: z.string({ error: "Address  is required" }),
-//   location: z.object(
-//     {
-//       lat: z.number(),
-//       lng: z.number(),
-//     },
-//     { error: "Location is required" },
-//   ),
-//   banner: z.optional(z.instanceof(FileList)),
-//   visibility: z.enum(["everyone", "attendees"]),
-// });
-
-// type EventFormValues = z.infer<typeof eventCreateSchema>;
 
 export function EventCreatePage() {
   const [selectedPlace, setSelectedPlace] = useState<PlaceLocation>();
@@ -107,13 +59,57 @@ export function EventCreatePage() {
   const { ref, ...fields } = register("banner");
   const banner = watch("banner");
   const fileName = banner?.item(0)?.name;
-  const onSubmit = (data: EventFormValues) => {
-    console.log(JSON.stringify(data));
-    const file = data.banner?.item(0);
-    if (file) {
-      console.log(file.name);
+
+  const onSubmit = async (data: EventFormValues) => {
+    const eventAttributes = {
+      title: data.title,
+      text: data.text,
+      start_at: new Date(data.start_at).toISOString(),
+      end_at: new Date(data.end_at).toISOString(),
+      publish_at: new Date(data.publish_at).toISOString(),
+      format: data.format!.label,
+      notification_new_tickets: data.notification_new_tickets,
+      visitors_visibility: data.visibility!,
+      location: {
+        latitude: data.location.lat,
+        longitude: data.location.lng,
+      },
+    };
+    const eventRelationships: EventRelationships = {
+      company: {
+        data: {
+          type: "company",
+          id: data.company!.id,
+        },
+      },
+    };
+
+    if (data.tags && data.tags.length > 0) {
+      eventRelationships["tags"] = {
+        data: data.tags.map((tag) => {
+          return {
+            id: tag.id,
+            type: "tag" as "tag",
+          };
+        }),
+      };
     }
-    reset();
+    let file: File | null | undefined | Blob = data.banner?.item(0);
+    if (!file) {
+      file = await fetch("/favicon.svg").then((response) => response.blob());
+    }
+    const create = async () => {
+      try {
+        const event = await EventService.create({
+          data: { type: "event", attributes: eventAttributes, relationships: eventRelationships },
+        });
+        await EventService.uploadBanner(event.data.id, file!);
+        reset();
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    create();
   };
 
   useEffect(() => {
@@ -124,11 +120,8 @@ export function EventCreatePage() {
     <main className="create-layout">
       <section className="story-panel">
         <p className="eyebrow">Create event</p>
-        <h2>All config knobs the backend asked for</h2>
-        <p className="lead">
-          This form is purely illustrative — it mirrors the required fields: posters, attendee visibility, publication
-          timing, and redirect URL.
-        </p>
+        <h2>It is the place where events are created!</h2>
+        <p className="lead">Here you can select a poster, set attendee visibility, start, end and publication date.</p>
         <ul className="profile-task-list">
           {hints.map((hint) => (
             <li key={hint}>{hint}</li>
@@ -226,17 +219,15 @@ export function EventCreatePage() {
               name="address"
               control={control}
               render={({ field }) => (
-                <>
-                  <PlacesAutocomplete
-                    address={field.value}
-                    onChange={(address) => field.onChange(address)}
-                    onSelected={(location, address) => {
-                      field.onChange(address);
-                      setValue("location", location);
-                      setSelectedPlace(location);
-                    }}
-                  />
-                </>
+                <PlacesAutocomplete
+                  address={field.value}
+                  onChange={(address) => field.onChange(address)}
+                  onSelected={(location, address) => {
+                    field.onChange(address);
+                    setValue("location", location);
+                    setSelectedPlace(location);
+                  }}
+                />
               )}
             ></Controller>
             {errors.location && <small>{errors.location.message}</small>}
@@ -246,10 +237,10 @@ export function EventCreatePage() {
         </fieldset>
 
         <fieldset>
-          <legend>Redirects</legend>
-          <label className="create-form-label">
-            <span>Redirect URL after payment</span>
-            <input type="url" placeholder="https://nice.app/thank-you" />
+          <legend>Notifications</legend>
+          <label className="create-form-label" htmlFor="notify_new_visitors">
+            <span>I want to be notified about new visitors</span>
+            <input id="notify_new_visitors" type="checkbox" {...register("notification_new_tickets")} />
           </label>
         </fieldset>
 
@@ -280,7 +271,7 @@ export function EventCreatePage() {
               Everyone
             </label>
             <label className="create-form-label" htmlFor="attendees-v">
-              <input id="attendees-v" type="radio" value={"attendees"} {...register("visibility")} />
+              <input id="attendees-v" type="radio" value={"staff_and_visitors"} {...register("visibility")} />
               Only confirmed attendees
             </label>
           </div>
