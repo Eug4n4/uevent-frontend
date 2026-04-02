@@ -1,6 +1,12 @@
 import { formEndpointQueryString } from "@/utils/query";
 import { api } from "../api";
-import type { CompanyAttributes, CompanyCreateAttributes, CompanyQueryParams } from "./types/company.types";
+import type {
+  CompanyAttributes,
+  CompanyBillingAttributes,
+  CompanyBillingCreateAttributes,
+  CompanyCreateAttributes,
+  CompanyQueryParams,
+} from "./types/company.types";
 import type { ResponseArrayPayload, ResponsePayload } from "./types/types";
 import { uploadFile } from "./utils";
 
@@ -18,6 +24,17 @@ export class CompanyService {
     return response.data;
   }
 
+  static async createBilling(payload: CompanyBillingCreateAttributes, companyId: string) {
+    const request = {
+      data: {
+        type: "billing",
+        attributes: payload,
+      },
+    };
+    const response = await api.post(`${CompanyService.endpoint}/${companyId}/billing`, request);
+    return response.data;
+  }
+
   static async uploadBanner(file: Blob, id: string) {
     return uploadFile(file, `${CompanyService.endpoint}/${id}/banner`);
   }
@@ -31,6 +48,13 @@ export class CompanyService {
 
   static async getById(id: string) {
     const response = await api.get<ResponsePayload<CompanyAttributes>>(`${CompanyService.endpoint}/${id}`);
+    return response.data;
+  }
+
+  static async getBilling(companyId: string) {
+    const response = await api.get<ResponsePayload<CompanyBillingAttributes>>(
+      `${CompanyService.endpoint}/${companyId}/billing`,
+    );
     return response.data;
   }
 }

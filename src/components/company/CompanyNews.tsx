@@ -27,7 +27,7 @@ export const CompanyNews = () => {
       <div className="header">
         <h3>Company news</h3>
         {authenticated && myCompany && (
-          <button type="button" className="primary-btn ghost" onClick={() => navigate("news")}>
+          <button type="button" className="primary-btn ghost" onClick={() => navigate("create")}>
             Create news
           </button>
         )}

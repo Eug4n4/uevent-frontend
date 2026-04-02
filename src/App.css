@@ -1231,7 +1231,7 @@
   margin: 12px 0;
   color: var(--muted);
 }
-
+.company-billing-form,
 .create-form {
   border-radius: calc(var(--radius-lg) + 4px);
   border: 1px solid rgba(148, 239, 255, 0.4);
@@ -1243,10 +1243,11 @@
   gap: 20px;
 }
 
+.company-billing-form .field > small,
 .create-form-label small {
   color: red
 }
-
+.company-billing-form fieldset,
 .create-form fieldset {
   border: 1px solid rgba(6, 182, 212, 0.2);
   border-radius: 20px;
