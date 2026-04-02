@@ -1,13 +1,7 @@
 import type { ProfileAttributes } from "../types/profile.types";
 import type { AccountAttributes, AccountRelationships } from "./account.types";
 import type { CompanyAttributes, CompanyQueryParams } from "./company.types";
-import type {
-  EventAttributes,
-  EventCreateAttributes,
-  EventIncluded,
-  EventQueryParams,
-  EventRelationships,
-} from "./event.types";
+import type { EventAttributes, EventCreateAttributes, EventQueryParams, EventRelationships } from "./event.types";
 import type { NewsAttributes, NewsRelationships } from "./news.types";
 import type { TagAttributes, TagQueryParams, TagRelationships } from "./tag.types";
 
@@ -25,7 +19,7 @@ type KnownAttributes =
   | CompanyAttributes
   | NewsAttributes;
 type KnownRelationships = AccountRelationships | TagRelationships | EventRelationships | NewsRelationships | undefined;
-type KnownIncluded = EventIncluded | undefined;
+// type KnownIncluded = EventIncluded | undefined;
 type ResourceType = "account" | "profile" | "event" | "company" | "comment" | "tag";
 export type KnownQueryParams = TagQueryParams | EventQueryParams | CompanyQueryParams;
 
@@ -41,27 +35,27 @@ type NewResource<Attr extends KnownAttributes, R extends KnownRelationships = un
   "id"
 >;
 
-type CompanyResource = Resource<CompanyAttributes> & {
+export type CompanyResource = Resource<CompanyAttributes> & {
   type: "company";
 };
 
-type AccountResource = Resource<AccountAttributes> & {
+export type AccountResource = Resource<AccountAttributes> & {
   type: "account";
 };
 
-type ProfileResource = Resource<ProfileAttributes> & {
+export type ProfileResource = Resource<ProfileAttributes> & {
   type: "profile";
 };
 
-type IncludedResource = CompanyResource | AccountResource | ProfileResource;
+type IncludedResource = CompanyResource | AccountResource | ProfileResource | undefined;
 
 export interface ResponsePayload<
   Attr extends KnownAttributes,
   R extends KnownRelationships = undefined,
-  I extends KnownIncluded = undefined,
+  I extends IncludedResource = undefined,
 > {
   data: Resource<Attr, R>;
-  included?: I;
+  included?: I[];
 }
 
 export interface RequestPayload<Attr extends KnownAttributes, R extends KnownRelationships = undefined> {

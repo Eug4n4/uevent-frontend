@@ -10,11 +10,11 @@ export interface EventAttributes {
   publish_at: string;
   start_at: string;
   end_at: string;
+  location: ResourceLocation;
   company?: EventIncluded;
 }
 
 export interface EventCreateAttributes extends Omit<EventAttributes, "banner_url" | "company" | "status"> {
-  location: ResourceLocation;
   visitors_visibility: "everyone" | "staff_and_visitors";
 }
 

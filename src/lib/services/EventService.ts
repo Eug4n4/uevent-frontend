@@ -8,7 +8,7 @@ import type {
   EventQueryParams,
   EventRelationships,
 } from "./types/event.types";
-import type { RequestPayload, ResponseArrayPayload, ResponsePayload } from "./types/types";
+import type { CompanyResource, RequestPayload, ResponseArrayPayload, ResponsePayload } from "./types/types";
 import { uploadFile } from "./utils";
 
 export class EventService {
@@ -39,6 +39,15 @@ export class EventService {
     return this.toDto(response.data);
   }
 
+  static async getById(eventId: string) {
+    const query = {};
+    this.includeCompanies(query);
+    const response = await api.get<ResponsePayload<EventAttributes, EventRelationships, CompanyResource>>(
+      formEndpointQueryString(`${EventService.endpoint}/${eventId}`, query),
+    );
+    return response.data;
+  }
+
   static includeCompanies(query?: EventQueryParams) {
     if (query) {
       query.include = "companies";
@@ -50,8 +59,8 @@ export class EventService {
     if (events.included !== undefined) {
       for (const include of events.included) {
         const company = {
-          id: include.id,
-          ...(include.attributes as CompanyAttributes),
+          id: include!.id,
+          ...(include!.attributes as CompanyAttributes),
         };
         for (const event of events.data) {
           if (event.relationships?.company.data.id === company.id) {

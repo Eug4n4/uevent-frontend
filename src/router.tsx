@@ -20,6 +20,7 @@ import { EventCheckoutPage } from "./pages/event/EventCheckoutPage";
 import { EventDetailPage } from "./pages/event/EventDetailPage";
 import { HomePage } from "./pages/HomePage";
 import { UserProfilePage } from "./pages/user/UserProfilePage";
+import { EventService } from "./lib/services/EventService";
 
 const router = createBrowserRouter([
   {
@@ -144,6 +145,9 @@ const router = createBrowserRouter([
           {
             path: ":eventId",
             element: <EventDetailPage />,
+            loader: async ({ params }) => {
+              return await EventService.getById(params.eventId as string);
+            },
           },
           {
             path: ":eventId/checkout",

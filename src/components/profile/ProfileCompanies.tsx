@@ -2,14 +2,13 @@ import { useMyCompanies } from "@/hooks/companies";
 import { usePagePagination } from "@/hooks/pagination";
 import Pagination from "@mui/material/Pagination";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { CompanyCard } from "../company/cards/CompanyCard";
 
 const PAGE_LIMIT = 3;
 
 const ProfileCompanies = () => {
   const { companies, fetchCompanies } = useMyCompanies();
   const { page, setPage, total, syncFromLinks, buildQuery } = usePagePagination(PAGE_LIMIT);
-  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -26,17 +25,7 @@ const ProfileCompanies = () => {
     return (
       <>
         {companies.map((company) => (
-          <article className="event-card" key={company.id} onClick={() => navigate(`/company/${company.id}`)}>
-            <div className="card-head">
-              <div>
-                <h3>{company.name}</h3>
-                <p className="event-summary">{company.email}</p>
-              </div>
-              <div style={{ width: 140, height: 140 }}>
-                <img src={company.banner_url || "/favicon.svg"} alt="" className="poster-thumb" loading="lazy" />
-              </div>
-            </div>
-          </article>
+          <CompanyCard key={company.id} company={company} />
         ))}
       </>
     );
