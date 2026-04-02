@@ -3,7 +3,9 @@ import { EventCard } from "@/components/event/cards/EventCard";
 import { MapPreview } from "@/components/MapPreview";
 import { usePagePagination } from "@/hooks/pagination";
 import { EventService } from "@/lib/services/EventService";
+import { TicketService } from "@/lib/services/TicketService";
 import type { EventDto } from "@/lib/services/types/event.types";
+import type { TicketDto } from "@/lib/services/types/ticket.types";
 import { toDateTimeString } from "@/utils/format.date";
 import Pagination from "@mui/material/Pagination";
 import { useEffect, useState } from "react";
@@ -28,6 +30,7 @@ export function EventDetailPage() {
   const { data: event, included } = useLoaderData<typeof EventService.getById>();
   const [similarEvents, setSimilarEvents] = useState<EventDto[]>();
   const [otherEvents, setOtherEvents] = useState<EventDto[]>();
+  const [tickets, setTickets] = useState<TicketDto[]>([]);
   const { page, setPage, total, syncFromLinks, buildQuery } = usePagePagination(SIMILAR_EVENTS_LIMIT);
   const {
     page: otherPage,
@@ -55,6 +58,18 @@ export function EventDetailPage() {
     getOther();
   }, [included, buildOtherQuery, syncOtherFromLinks]);
 
+  useEffect(() => {
+    const getTickets = async () => {
+      const tickets = await TicketService.getAll({ event_id: event.id });
+      setTickets(tickets.data);
+    };
+    getTickets();
+  }, [event.id]);
+
+  const onEventSubscribe = () => {};
+
+  const onCompanySubscribe = () => {};
+
   return (
     <main className="event-detail">
       <section className="story-panel detail-hero">
@@ -73,7 +88,12 @@ export function EventDetailPage() {
             <p>{event.attributes.text}</p>
           </div>
           <div className="detail-cta">
-            <button className="pill-btn">Follow organizer</button>
+            <button className="primary-btn" onClick={() => onCompanySubscribe()}>
+              Follow organizer
+            </button>
+            <button className="primary-btn" onClick={() => onEventSubscribe()}>
+              Subscribe to event
+            </button>
           </div>
         </div>
         <img src={event.attributes.banner_url} alt="Event poster" className="detail-poster" />
@@ -82,6 +102,22 @@ export function EventDetailPage() {
       <section className="detail-grid">
         <article>
           <h3>Tickets</h3>
+          {tickets.length > 0 ? (
+            tickets.map((ticket) => {
+              return (
+                <section key={ticket.id}>
+                  <p>{ticket.name}</p>
+                  <p>{ticket.description}</p>
+                  <p>{ticket.price}</p>
+                  <p>
+                    {ticket.available} / ${ticket.total}
+                  </p>
+                </section>
+              );
+            })
+          ) : (
+            <p>Sorry but this event has no tickets!</p>
+          )}
         </article>
 
         <article>

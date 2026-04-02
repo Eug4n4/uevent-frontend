@@ -1,7 +1,9 @@
 import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
+import { OptionalAuth } from "./components/auth/context/OptionalAuth";
 import AuthRequired from "./components/AuthRequired";
 import { CheckCompanyOwner } from "./components/CheckCompanyOwner";
+import { OptionalCompanyOwner } from "./components/company/context/OptionalCompanyOwner";
 import ProfileCompanies from "./components/profile/ProfileCompanies";
 import ProfileEvents from "./components/profile/ProfileEvents";
 import ProfileNotifications from "./components/profile/ProfileNotifications";
@@ -9,6 +11,7 @@ import ProfileSettings from "./components/profile/ProfileSettings";
 import ProfileSubscriptions from "./components/profile/ProfileSubscriptions";
 import ProfileTickets from "./components/profile/ProfileTickets";
 import { CompanyService } from "./lib/services/CompanyService";
+import { EventService } from "./lib/services/EventService";
 import { EventCreatePage } from "./pages//event/EventCreatePage";
 import { AdminPage } from "./pages/AdminPage";
 import { AuthPage } from "./pages/auth/AuthPage";
@@ -20,7 +23,6 @@ import { EventCheckoutPage } from "./pages/event/EventCheckoutPage";
 import { EventDetailPage } from "./pages/event/EventDetailPage";
 import { HomePage } from "./pages/HomePage";
 import { UserProfilePage } from "./pages/user/UserProfilePage";
-import { EventService } from "./lib/services/EventService";
 
 const router = createBrowserRouter([
   {
@@ -41,7 +43,13 @@ const router = createBrowserRouter([
       },
       {
         path: "company/:id",
-        element: <CompanyProfilePage />,
+        element: (
+          <OptionalAuth>
+            <OptionalCompanyOwner>
+              <CompanyProfilePage />
+            </OptionalCompanyOwner>
+          </OptionalAuth>
+        ),
         loader: async ({ params }) => {
           return await CompanyService.getById(params.id as string);
         },

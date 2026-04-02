@@ -1,5 +1,5 @@
 import type { EventDto } from "@/lib/services/types/event.types";
-import { toDateTimeString } from "@/utils/format.date";
+import { toFullDateString } from "@/utils/format.date";
 import { useNavigate } from "react-router-dom";
 
 export type EventPreview = {
@@ -61,7 +61,7 @@ export function EventCard({ event }: EventCardProps) {
         <div>
           <span>When</span>
           <strong>
-            {toDateTimeString(event.start_at)} - {toDateTimeString(event.end_at)}
+            {toFullDateString(event.start_at)} - {toFullDateString(event.end_at)}
           </strong>
         </div>
         {/* <div>
@@ -80,7 +80,7 @@ export function EventCard({ event }: EventCardProps) {
           <div>
             <strong>Published by: {event.company?.name}</strong>
             <br />
-            <small>At: {toDateTimeString(event.publish_at)}</small>
+            <small>At: {toFullDateString(event.publish_at)}</small>
           </div>
         </div>
         {/* <div className="organizer">
@@ -138,11 +138,3 @@ export function EventCard({ event }: EventCardProps) {
     </article>
   );
 }
-
-// function initials(name: string) {
-//   return name
-//     .split(" ")
-//     .map((part) => part[0]?.toUpperCase() ?? "")
-//     .join("")
-//     .slice(0, 2);
-// }

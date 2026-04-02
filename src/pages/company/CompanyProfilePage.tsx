@@ -1,3 +1,4 @@
+import { useOptionalCompanyOwner } from "@/components/company/context/optional.owner";
 import { MapPreview } from "@/components/MapPreview";
 import { useNews } from "@/hooks/news";
 import { usePagePagination } from "@/hooks/pagination";
@@ -12,7 +13,7 @@ const PAGE_LIMIT = 3;
 export function CompanyProfilePage() {
   const { data: company } = useLoaderData<typeof CompanyService.getById>();
   const { page, setPage, total, syncFromLinks, buildQuery } = usePagePagination(PAGE_LIMIT);
-
+  const { authenticated, myCompany } = useOptionalCompanyOwner();
   const { news, fetchNews } = useNews();
   const navigate = useNavigate();
 
@@ -39,9 +40,11 @@ export function CompanyProfilePage() {
       <section className="company-card">
         <div className="header">
           <h3>Company news</h3>
-          <button type="button" className="primary-btn ghost" onClick={() => navigate("news")}>
-            Create news
-          </button>
+          {authenticated && myCompany && (
+            <button type="button" className="primary-btn ghost" onClick={() => navigate("news")}>
+              Create news
+            </button>
+          )}
         </div>
         <ul className="subscription-list">
           {news.map((value) => (

@@ -12,6 +12,15 @@ const dateTimeFormatter = new Intl.DateTimeFormat("us", {
   minute: "2-digit",
 });
 
+const fullDateFormatter = new Intl.DateTimeFormat("us", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+  weekday: "short",
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
 const millisToDateString = (milliseconds: number, formatter: Intl.DateTimeFormat) => {
   return formatter.format(milliseconds);
 };
@@ -29,4 +38,8 @@ export const toDateString = (date: Date | string) => {
 
 export const toDateTimeString = (date: Date | string) => {
   return millisToDateString(objectToMillis(date), dateTimeFormatter);
+};
+
+export const toFullDateString = (date: Date | string) => {
+  return millisToDateString(objectToMillis(date), fullDateFormatter);
 };
