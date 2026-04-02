@@ -3,6 +3,9 @@ import App from "./App";
 import { OptionalAuth } from "./components/auth/context/OptionalAuth";
 import AuthRequired from "./components/AuthRequired";
 import { CheckCompanyOwner } from "./components/CheckCompanyOwner";
+import { CompanyContacts } from "./components/company/CompanyContacts";
+import { CompanyNews } from "./components/company/CompanyNews";
+import { CompanySettings } from "./components/company/CompanySettings";
 import { OptionalCompanyOwner } from "./components/company/context/OptionalCompanyOwner";
 import ProfileCompanies from "./components/profile/ProfileCompanies";
 import ProfileEvents from "./components/profile/ProfileEvents";
@@ -42,20 +45,45 @@ const router = createBrowserRouter([
         element: <AdminPage />,
       },
       {
+        id: "company-profile",
         path: "company/:id",
-        element: (
-          <OptionalAuth>
-            <OptionalCompanyOwner>
-              <CompanyProfilePage />
-            </OptionalCompanyOwner>
-          </OptionalAuth>
-        ),
+        element: <CompanyProfilePage />,
         loader: async ({ params }) => {
           return await CompanyService.getById(params.id as string);
         },
+        children: [
+          {
+            index: true,
+            element: <Navigate to={"contacts"} />,
+          },
+          {
+            path: "contacts",
+            element: <CompanyContacts />,
+          },
+          {
+            path: "news",
+            element: (
+              <OptionalAuth>
+                <OptionalCompanyOwner>
+                  <CompanyNews />,
+                </OptionalCompanyOwner>
+              </OptionalAuth>
+            ),
+          },
+          {
+            path: "settings",
+            element: (
+              <AuthRequired>
+                <CheckCompanyOwner>
+                  <CompanySettings />
+                </CheckCompanyOwner>
+              </AuthRequired>
+            ),
+          },
+        ],
       },
       {
-        path: "company/:id/news",
+        path: "company/:id/news/create",
         element: (
           <AuthRequired>
             <CheckCompanyOwner>
