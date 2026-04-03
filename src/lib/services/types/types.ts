@@ -4,7 +4,16 @@ import type { CompanyAttributes, CompanyBillingAttributes, CompanyQueryParams } 
 import type { EventAttributes, EventCreateAttributes, EventQueryParams, EventRelationships } from "./event.types";
 import type { NewsAttributes, NewsRelationships } from "./news.types";
 import type { TagAttributes, TagQueryParams, TagRelationships } from "./tag.types";
-import type { PromoCodeAttributes, TicketAttributes, TicketQuery, TicketRelationships } from "./ticket.types";
+import type {
+  PromoCodeAttributes,
+  PromoCodeRelationships,
+  PurchaseAttributes,
+  TicketAttributes,
+  TicketQuery,
+  TicketRelationships,
+  UserTicketAttributes,
+  UserTicketRelationships,
+} from "./ticket.types";
 
 export type ResourceLocation = {
   latitude: number;
@@ -20,13 +29,17 @@ type KnownAttributes =
   | CompanyAttributes
   | CompanyBillingAttributes
   | TicketAttributes
+  | UserTicketAttributes
   | PromoCodeAttributes
+  | PurchaseAttributes
   | NewsAttributes;
 type KnownRelationships =
   | AccountRelationships
   | TagRelationships
   | EventRelationships
   | TicketRelationships
+  | PromoCodeRelationships
+  | UserTicketRelationships
   | NewsRelationships
   | undefined;
 // type KnownIncluded = EventIncluded | undefined;
@@ -39,7 +52,8 @@ type ResourceType =
   | "tag"
   | "billing"
   | "ticket"
-  | "promo_code";
+  | "promo_code"
+  | "purchase";
 export type KnownQueryParams = TagQueryParams | EventQueryParams | CompanyQueryParams | TicketQuery;
 
 type Resource<Attr extends KnownAttributes, R extends KnownRelationships = undefined> = {

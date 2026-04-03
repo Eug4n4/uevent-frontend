@@ -1260,6 +1260,7 @@
   font-weight: 600;
 }
 
+.promo-row-label,
 .create-form label {
   display: flex;
   flex-direction: column;
@@ -1390,8 +1391,20 @@
   gap: 8px;
 }
 
+.promo-total {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 16px;
+}
+
 .promo-row input {
   flex: 1;
+   border-radius: 16px;
+  border: 1px solid rgba(6, 182, 212, 0.4);
+  padding: 14px 18px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.8);
 }
 
 @keyframes float {
@@ -1509,4 +1522,113 @@
 .pagination-container {
   display: flex;
   justify-content: center;
+}
+
+.spinner,
+.spinner:before,
+.spinner:after {
+  border-radius: 50%;
+}
+
+.spinner {
+  color: #ffffff;
+  font-size: 22px;
+  text-indent: -99999px;
+  margin: 0px auto;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  box-shadow: inset 0 0 0 2px;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+.spinner:before,
+.spinner:after {
+  position: absolute;
+  content: '';
+}
+
+.spinner:before {
+  width: 10.4px;
+  height: 20.4px;
+  background: #0055DE;
+  border-radius: 20.4px 0 0 20.4px;
+  top: -0.2px;
+  left: -0.2px;
+  -webkit-transform-origin: 10.4px 10.2px;
+  transform-origin: 10.4px 10.2px;
+  -webkit-animation: loading 2s infinite ease 1.5s;
+  animation: loading 2s infinite ease 1.5s;
+}
+
+.spinner:after {
+  width: 10.4px;
+  height: 10.2px;
+  background: #0055DE;
+  border-radius: 0 10.2px 10.2px 0;
+  top: -0.1px;
+  left: 10.2px;
+  -webkit-transform-origin: 0px 10.2px;
+  transform-origin: 0px 10.2px;
+  -webkit-animation: loading 2s infinite ease;
+  animation: loading 2s infinite ease;
+}
+
+#payment-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 30vw;
+  min-width: 500px;
+  min-height: 380px;
+  align-self: center;
+  padding: 40px;
+  animation: fadeInAnimation 1s ease forwards;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+#status-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+#details-table {
+  overflow-x: auto;
+  width: 100%;
+}
+
+#details-table table {
+    width: 100%;
+  font-size: 14px;
+  border-collapse: collapse;
+}
+
+#details-table table tbody tr:first-child td {
+  border-top: 1px solid #E6E6E6; 
+  padding-top: 10px;
+}
+#details-table table tbody tr:last-child td {
+  border-bottom: 1px solid #E6E6E6; 
+}
+#details-table td {
+  padding-bottom: 10px;
+}
+
+
+.TableContent {
+  text-align: right;
+  color: #6D6E78;
+}
+
+.TableLabel {
+  font-weight: 600;
+  color: #30313D;
 }

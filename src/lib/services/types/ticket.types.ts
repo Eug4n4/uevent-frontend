@@ -25,12 +25,39 @@ export interface TicketAttributes extends TicketCreateAttributes {
   updated_at: string;
 }
 
+export interface UserTicketAttributes {
+  visibility: boolean;
+  status: "unused" | "used" | "canceled";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserTicketDto extends UserTicketAttributes, Omit<TicketAttributes, "status"> {
+  id: string;
+}
+
+export interface UserTicketRelationships {
+  account: { data: { id: string; type: "account" } };
+  ticket: { data: { id: string; type: "ticket" } };
+  promo_code?: { data: { id: string; type: "promo_code" } };
+  transaction: { data: { id: string; type: "transaction" } };
+}
+
 export interface PromoCodeAttributes extends PromoCodeCreateAttributes {
   status: "active" | "canceled";
   used: number;
   remaining: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface PromoCodeRelationships extends Pick<UserTicketRelationships, "ticket"> {}
+
+export interface PurchaseAttributes {
+  client_secret: string;
+  transaction_id: string;
+  final_price: number;
+  currency: string;
 }
 
 export interface TicketRelationships {
@@ -40,6 +67,11 @@ export interface TicketRelationships {
       type: "event";
     };
   };
+}
+
+export interface PromoCodeDto extends PromoCodeAttributes {
+  id: string;
+  ticket_id: string;
 }
 
 export interface TicketDto extends TicketAttributes {
@@ -56,4 +88,13 @@ export interface TicketQuery {
   "page[limit]"?: number;
   "page[offset]"?: number;
   sort?: TicketSortOptions;
+}
+
+export interface PromoCodeQuery {
+  ticket_id?: string;
+  event_id?: string;
+  "page[limit]"?: number;
+  "page[offset]"?: number;
+  code?: string;
+  available?: boolean;
 }

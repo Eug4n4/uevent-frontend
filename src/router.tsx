@@ -22,6 +22,7 @@ import { CompanyCreatePage } from "./pages/company/CompanyCreatePage";
 import { CompanyProfilePage } from "./pages/company/CompanyProfilePage";
 import { CompanyTicketManagerPage } from "./pages/company/CompanyTicketManagerPage";
 import { NewsCreatePage } from "./pages/company/news/NewsCreatePage";
+import { CompletePageWrapper } from "./pages/CompletePage";
 import { EventCheckoutPage } from "./pages/event/EventCheckoutPage";
 import { EventDetailPage } from "./pages/event/EventDetailPage";
 import { HomePage } from "./pages/HomePage";
@@ -187,8 +188,20 @@ const router = createBrowserRouter([
             },
           },
           {
-            path: ":eventId/checkout",
-            element: <EventCheckoutPage />,
+            path: ":eventId/:ticketId/checkout",
+            element: (
+              <AuthRequired>
+                <EventCheckoutPage />,
+              </AuthRequired>
+            ),
+          },
+          {
+            path: ":eventId/:ticketId/checkout/complete",
+            element: (
+              <AuthRequired>
+                <CompletePageWrapper />
+              </AuthRequired>
+            ),
           },
         ],
       },

@@ -9,7 +9,7 @@ import type { TicketDto } from "@/lib/services/types/ticket.types";
 import { toDateTimeString } from "@/utils/format.date";
 import Pagination from "@mui/material/Pagination";
 import { useEffect, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 const attendees = [
   { name: "Alina Kozak", company: "Polar DAO" },
@@ -40,6 +40,8 @@ export function EventDetailPage() {
     buildQuery: buildOtherQuery,
   } = usePagePagination(SIMILAR_EVENTS_LIMIT);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getSimilar = async () => {
       const events = await EventService.getAll(buildQuery({ format: event.attributes.format }));
@@ -69,6 +71,12 @@ export function EventDetailPage() {
   const onEventSubscribe = () => {};
 
   const onCompanySubscribe = () => {};
+
+  const handleBuyClick = (ticket: TicketDto) => {
+    if (ticket.available > 0) {
+      navigate(`${ticket.id}/checkout`, { state: ticket });
+    }
+  };
 
   return (
     <main className="event-detail">
@@ -102,22 +110,29 @@ export function EventDetailPage() {
       <section className="detail-grid">
         <article>
           <h3>Tickets</h3>
-          {tickets.length > 0 ? (
-            tickets.map((ticket) => {
-              return (
-                <section key={ticket.id}>
-                  <p>{ticket.name}</p>
-                  <p>{ticket.description}</p>
-                  <p>{ticket.price} €</p>
-                  <p>
-                    {ticket.available} / {ticket.total}
-                  </p>
-                </section>
-              );
-            })
-          ) : (
-            <p>Sorry but this event has no tickets!</p>
-          )}
+          <ul className="attendee-list">
+            {tickets.length > 0 ? (
+              tickets.map((ticket) => {
+                return (
+                  <li key={ticket.id}>
+                    <h3>{ticket.name}</h3>
+                    <p>Price: {ticket.price} €</p>
+                    <p>Available: {ticket.available}</p>
+                    <p>Total: {ticket.total}</p>
+                    <button
+                      className="primary-btn"
+                      disabled={ticket.available === 0}
+                      onClick={() => handleBuyClick(ticket)}
+                    >
+                      {ticket.available === 0 ? "SOLD OUT" : "Buy now"}
+                    </button>
+                  </li>
+                );
+              })
+            ) : (
+              <p>Sorry but this event has no tickets!</p>
+            )}
+          </ul>
         </article>
 
         <article>
