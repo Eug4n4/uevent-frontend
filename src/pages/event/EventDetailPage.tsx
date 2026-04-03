@@ -108,9 +108,9 @@ export function EventDetailPage() {
                 <section key={ticket.id}>
                   <p>{ticket.name}</p>
                   <p>{ticket.description}</p>
-                  <p>{ticket.price}</p>
+                  <p>{ticket.price} €</p>
                   <p>
-                    {ticket.available} / ${ticket.total}
+                    {ticket.available} / {ticket.total}
                   </p>
                 </section>
               );

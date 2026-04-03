@@ -93,21 +93,22 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "companies",
-        children: [
-          {
-            path: "new",
-            element: (
-              <AuthRequired>
-                <CompanyCreatePage />,
-              </AuthRequired>
-            ),
-          },
-          {
-            path: "manage/tickets",
-            element: <CompanyTicketManagerPage />,
-          },
-        ],
+        path: "company/:id/tickets/create",
+        element: (
+          <AuthRequired>
+            <CheckCompanyOwner>
+              <CompanyTicketManagerPage />,
+            </CheckCompanyOwner>
+          </AuthRequired>
+        ),
+      },
+      {
+        path: "companies/new",
+        element: (
+          <AuthRequired>
+            <CompanyCreatePage />,
+          </AuthRequired>
+        ),
       },
       {
         path: "profile/:id",

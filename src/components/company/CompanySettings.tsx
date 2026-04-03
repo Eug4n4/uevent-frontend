@@ -7,7 +7,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useRouteLoaderData } from "react-router-dom";
+import { Link, useRouteLoaderData } from "react-router-dom";
 import PlacesAutocomplete, { type PlaceLocation } from "../common/inputs/PlacesAutocomplete";
 import { MapPreview } from "../MapPreview";
 
@@ -82,8 +82,11 @@ export const CompanySettings = () => {
   };
 
   return (
-    <section className="company-card" onSubmit={dHandleSubmit(onDetailsSubmit)}>
-      <form className="create-form">
+    <section className="company-card">
+      <Link className="nav-link" to={`/company/${company.id}/tickets/create`}>
+        Create tickets
+      </Link>
+      <form className="create-form" onSubmit={dHandleSubmit(onDetailsSubmit)}>
         <fieldset>
           <legend>Company information</legend>
           <label className="field">

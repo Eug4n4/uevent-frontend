@@ -1,69 +1,123 @@
-const managedEvents = [
-  { id: "ev-north", name: "YabiYada Fintech Catchup" },
-  { id: "ev-softskills", name: "Soft Skills Sandbox" },
-];
+import { PromoCodeSection } from "@/components/company/sections/PromoCodeSection";
+import { EventService } from "@/lib/services/EventService";
+import { TicketService } from "@/lib/services/TicketService";
+import type { EventDto, EventQueryParams } from "@/lib/services/types/event.types";
+import {
+  ticketCreateAttributesSchema,
+  type PromoCodeCreateAttributes,
+  type TicketCreateAttributes,
+} from "@/lib/services/types/ticket.types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import { useCallback, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 
 export function CompanyTicketManagerPage() {
+  const [events, setEvents] = useState<EventDto[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<EventDto | null>(null);
+  const [promoCodes, setPromoCodes] = useState<PromoCodeCreateAttributes[]>([]);
+  const params = useParams();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<TicketCreateAttributes>({
+    resolver: zodResolver(ticketCreateAttributesSchema),
+    mode: "all",
+    defaultValues: {
+      name: "",
+      description: ".",
+      price: 0,
+      total: 0,
+    },
+  });
+
+  useEffect(() => {
+    const getEvents = async (query?: EventQueryParams) => {
+      const events = await EventService.getAll(query);
+      setEvents(events.data);
+    };
+    getEvents({ "page[limit]": 99, company_id: params.id as string });
+  }, [params.id]);
+
+  const onSubmit = async (data: TicketCreateAttributes) => {
+    if (!selectedEvent) {
+      return;
+    }
+    try {
+      const ticket = await TicketService.create(data, selectedEvent.id);
+      if (promoCodes.length > 0) {
+        await Promise.all(promoCodes.map((promo) => TicketService.createPromocode(promo, ticket.data.id)));
+      }
+      reset();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setPromoCodes([]);
+    }
+  };
+
+  const onPromoAdd = useCallback(
+    (data: PromoCodeCreateAttributes) => {
+      setPromoCodes((prev) => [...prev, data]);
+    },
+    [setPromoCodes],
+  );
+
   return (
     <main className="create-layout">
       <section className="story-panel">
         <p className="eyebrow">Ticket & promo setup</p>
-        <h2>Configure inventory for published events</h2>
-        <p className="lead">Компания выбирает одно из своих мероприятий, после чего добавляет набор билетов и промокоды.</p>
+        <h2>Configure tickets for your events</h2>
         <ul className="profile-task-list">
           <li>Create at least one ticket tier before publishing</li>
           <li>Promo codes live independently from the public event</li>
-          <li>Totals sync with the attendee checkout counter</li>
         </ul>
       </section>
+      <div className="create-form">
+        <form className="create-form" onSubmit={handleSubmit(onSubmit)}>
+          <fieldset>
+            <legend>Select event</legend>
+            <label>
+              <span>Event</span>
+              <Autocomplete
+                options={events}
+                getOptionLabel={(op) => op.title}
+                onChange={(_, value) => setSelectedEvent(value)}
+                renderInput={(params) => <TextField {...params} placeholder="Search..." />}
+              />
+            </label>
+            <label>
+              <span>Ticket name:</span>
+              <input {...register("name")} placeholder="VIP" />
+              {errors.name && <small>{errors.name.message}</small>}
+            </label>
+            <label>
+              <span>Price for 1 ticket (€):</span>
+              <input type="number" step={0.01} {...register("price", { valueAsNumber: true })} />
+              {errors.price && <small>{errors.price.message}</small>}
+            </label>
+            <label>
+              <span>Total tickets available</span>
+              <input type="number" placeholder="120" {...register("total", { valueAsNumber: true })} />
+              {errors.total && <small>{errors.total.message}</small>}
+            </label>
+          </fieldset>
 
-      <form className="create-form">
-        <fieldset>
-          <legend>Select event</legend>
-          <label>
-            <span>Event</span>
-            <select>
-              {managedEvents.map((event) => (
-                <option key={event.id} value={event.id}>
-                  {event.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            <span>Total tickets available</span>
-            <input type="number" placeholder="120" />
-          </label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Promo codes</legend>
-          <label>
-            <span>Code</span>
-            <input type="text" placeholder="FROST20" />
-          </label>
-          <label>
-            <span>Discount (%)</span>
-            <input type="number" placeholder="20" />
-          </label>
-          <label>
-            <span>Usage limit</span>
-            <input type="number" placeholder="100" />
-          </label>
-          <button type="button" className="pill-btn">
-            Add promo code
-          </button>
-        </fieldset>
-
-        <div className="form-actions">
-          <button type="button" className="pill-btn">
-            Save draft
-          </button>
-          <button type="submit" className="primary-btn">
-            Publish availability
-          </button>
-        </div>
-      </form>
+          <div className="form-actions">
+            <button type="submit" className="primary-btn" disabled={isSubmitting}>
+              {isSubmitting ? "Please wait..." : "Create"}
+            </button>
+          </div>
+        </form>
+        <form className="create-form">
+          <PromoCodeSection promoCodes={promoCodes} onAdd={onPromoAdd} />
+        </form>
+      </div>
     </main>
   );
 }
