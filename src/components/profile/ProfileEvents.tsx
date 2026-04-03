@@ -20,6 +20,10 @@ const ProfileEvents = () => {
     const getEvents = async (query?: EventQueryParams) => {
       const myCompanies = await CompanyService.getMy({ me: true });
       const companyIds = myCompanies.data.map((company) => company.id);
+
+      if (companyIds.length === 0) {
+        return;
+      }
       const responses = await Promise.all(companyIds.map((id) => EventService.getMy({ ...query, company_id: id })));
       const newEvents: EventDto[] = [];
       const links = responses[0].links;
