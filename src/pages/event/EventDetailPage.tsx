@@ -98,10 +98,11 @@ export function EventDetailPage() {
     const isSub = async () => {
       if (user) {
         setIsEventSubscriber(await EventService.isSubscriber(event.id, user.id));
+        setIsCompanySubscriber(await CompanyService.isSubscriber(event.relationships!.company.data.id, user.id));
       }
     };
     isSub();
-  }, [event.id, user]);
+  }, [event.id, event.relationships, user]);
 
   const fetchComments = useCallback(async () => {
     setCommentsLoading(true);
@@ -171,7 +172,7 @@ export function EventDetailPage() {
           <li key={comment.id}>
             <div>
               <strong>{comment.profile?.username ?? "Member"}</strong>
-              <span>{toDateTimeString(comment.created_at)}</span>
+              <span>{` ${toDateTimeString(comment.created_at)}`}</span>
             </div>
             <p>{comment.text}</p>
             {comment.children.length > 0 && renderComments(comment.children)}

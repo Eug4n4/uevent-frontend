@@ -43,6 +43,19 @@ export class CompanyService {
     await api.delete(`${CompanyService.endpoint}/${companyId}/subscriptions`);
   }
 
+  static async getSubscribers(companyId: string, query?: CompanyQueryParams) {
+    const response = await api.get<ResponseArrayPayload<CompanyAttributes>>(
+      formEndpointQueryString(`${CompanyService.endpoint}/${companyId}/subscriptions`, query),
+    );
+    return response.data;
+  }
+
+  static async isSubscriber(companyId: string, userId: string) {
+    const subs = await CompanyService.getSubscribers(companyId, { "page[limit]": 99 });
+    const sub = subs.data.find((sub) => sub.id === userId);
+    return sub !== undefined;
+  }
+
   static async uploadBanner(file: Blob, id: string) {
     return uploadFile(file, `${CompanyService.endpoint}/${id}/banner`);
   }

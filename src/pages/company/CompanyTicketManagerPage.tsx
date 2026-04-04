@@ -10,15 +10,22 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
+import { AxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
+
+type FeedbackState =
+  | { status: "idle"; message?: string }
+  | { status: "success"; message: string }
+  | { status: "error"; message: string };
 
 export function CompanyTicketManagerPage() {
   const [events, setEvents] = useState<EventDto[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<EventDto | null>(null);
   const [promoCodes, setPromoCodes] = useState<PromoCodeCreateAttributes[]>([]);
   const params = useParams();
+  const [feedback, setFeedback] = useState<FeedbackState>();
 
   const {
     register,
@@ -55,9 +62,16 @@ export function CompanyTicketManagerPage() {
       }
       reset();
     } catch (e) {
-      console.log(e);
+      let message = "";
+      if (e instanceof AxiosError) {
+        message = e.response?.data.errors[0].detail.message as string;
+      } else {
+        message += e;
+      }
+      setFeedback({ status: "error", message });
     } finally {
       setPromoCodes([]);
+      setFeedback({ status: "success", message: "Successfully created new  ticket!" });
     }
   };
 
@@ -79,6 +93,9 @@ export function CompanyTicketManagerPage() {
         </ul>
       </section>
       <div className="create-form">
+        {feedback && (
+          <p className={`feedback ${feedback.status === "error" ? "error" : "success"}`}>{feedback.message}</p>
+        )}
         <form className="create-form" onSubmit={handleSubmit(onSubmit)}>
           <fieldset>
             <legend>Select event</legend>

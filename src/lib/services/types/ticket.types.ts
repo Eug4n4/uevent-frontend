@@ -3,7 +3,7 @@ import z from "zod";
 export const ticketCreateAttributesSchema = z.object({
   name: z.string().min(3, { error: "Name is too short" }).max(255, { error: "Name is too long" }),
   description: z.optional(z.string().max(255, { error: "Description is too loong" })),
-  price: z.number({ error: "Price is a number" }).min(1),
+  price: z.number({ error: "Price is a number" }).min(0),
   total: z.number({ error: "Total is a number" }).min(1),
 });
 

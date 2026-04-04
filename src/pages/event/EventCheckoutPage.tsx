@@ -86,6 +86,10 @@ export function EventCheckoutPage() {
     setLoading(true);
     try {
       const purchase = await TicketService.purchase(ticket.id, quantity, promo);
+      if (purchase.data === undefined) {
+        setStatusMessage({ status: "success", message: "Transaction succeeded!" });
+        return;
+      }
       if (promo.length > 0) {
         setDiscount(purchase.data.attributes.final_price / 100);
       }
