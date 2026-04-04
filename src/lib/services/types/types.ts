@@ -5,6 +5,7 @@ import type { EventAttributes, EventCreateAttributes, EventQueryParams, EventRel
 import type { NewsAttributes, NewsRelationships } from "./news.types";
 import type { TagAttributes, TagQueryParams, TagRelationships } from "./tag.types";
 import type { PromoCodeAttributes, TicketAttributes, TicketQuery, TicketRelationships } from "./ticket.types";
+import type { CommentAttributes, CommentRelationships, CommentQueryParams } from "./comment.types";
 
 export type ResourceLocation = {
   latitude: number;
@@ -21,13 +22,15 @@ type KnownAttributes =
   | CompanyBillingAttributes
   | TicketAttributes
   | PromoCodeAttributes
-  | NewsAttributes;
+  | NewsAttributes
+  | CommentAttributes;
 type KnownRelationships =
   | AccountRelationships
   | TagRelationships
   | EventRelationships
   | TicketRelationships
   | NewsRelationships
+  | CommentRelationships
   | undefined;
 // type KnownIncluded = EventIncluded | undefined;
 type ResourceType =
@@ -40,7 +43,7 @@ type ResourceType =
   | "billing"
   | "ticket"
   | "promo_code";
-export type KnownQueryParams = TagQueryParams | EventQueryParams | CompanyQueryParams | TicketQuery;
+export type KnownQueryParams = TagQueryParams | EventQueryParams | CompanyQueryParams | TicketQuery | CommentQueryParams;
 
 type Resource<Attr extends KnownAttributes, R extends KnownRelationships = undefined> = {
   id: string;
@@ -66,7 +69,11 @@ export type ProfileResource = Resource<ProfileAttributes> & {
   type: "profile";
 };
 
-type IncludedResource = CompanyResource | AccountResource | ProfileResource | undefined;
+export type CommentResource = Resource<CommentAttributes, CommentRelationships> & {
+  type: "comment";
+};
+
+type IncludedResource = CompanyResource | AccountResource | ProfileResource | CommentResource | undefined;
 
 export interface ResponsePayload<
   Attr extends KnownAttributes,
