@@ -3,11 +3,12 @@ import { EventCard } from "@/components/event/cards/EventCard";
 import { MapPreview } from "@/components/MapPreview";
 import { usePagePagination } from "@/hooks/pagination";
 import { CommentService } from "@/lib/services/CommentService";
+import { CompanyService } from "@/lib/services/CompanyService";
 import { EventService } from "@/lib/services/EventService";
 import { TicketService } from "@/lib/services/TicketService";
 import type { CommentDto } from "@/lib/services/types/comment.types";
 import type { EventDto } from "@/lib/services/types/event.types";
-import type { ProfileAttributes } from "@/lib/services/types/profile.types";
+import type { ProfileDto } from "@/lib/services/types/profile.types";
 import type { TicketDto } from "@/lib/services/types/ticket.types";
 import type { IRootState } from "@/state/store";
 import { toDateTimeString } from "@/utils/format.date";
@@ -22,15 +23,21 @@ const SIMILAR_EVENTS_LIMIT = 3;
 export function EventDetailPage() {
   const { data: event, included } = useLoaderData<typeof EventService.getById>();
   const [similarEvents, setSimilarEvents] = useState<EventDto[]>();
+
   const [otherEvents, setOtherEvents] = useState<EventDto[]>();
   const [tickets, setTickets] = useState<TicketDto[]>([]);
-  const [visitors, setVisitors] = useState<ProfileAttributes[]>([]);
+
+  const [visitors, setVisitors] = useState<ProfileDto[]>([]);
   const [visitorsError, setVisitorsError] = useState("");
+  const [isEventSubscriber, setIsEventSubscriber] = useState(false);
+  const [isCompanySubscriber, setIsCompanySubscriber] = useState(false);
+
   const [comments, setComments] = useState<CommentDto[]>([]);
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [commentFeedback, setCommentFeedback] = useState<string | null>(null);
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+
   const { page, setPage, total, syncFromLinks, buildQuery } = usePagePagination(SIMILAR_EVENTS_LIMIT);
   const {
     page: otherPage,
@@ -39,7 +46,7 @@ export function EventDetailPage() {
     syncFromLinks: syncOtherFromLinks,
     buildQuery: buildOtherQuery,
   } = usePagePagination(SIMILAR_EVENTS_LIMIT);
-  const { user } = useSelector((state: IRootState) => state.auth);
+  const { user, isAuthenticated } = useSelector((state: IRootState) => state.auth);
 
   const navigate = useNavigate();
 
@@ -73,7 +80,11 @@ export function EventDetailPage() {
     const getVisitors = async () => {
       try {
         const visitors = await EventService.getVisitors(event.id);
-        setVisitors(visitors.data.map((v) => v.attributes));
+        const result: ProfileDto[] = [];
+        for (const v of visitors.data) {
+          result.push({ id: v.id, ...v.attributes });
+        }
+        setVisitors(result);
       } catch (error) {
         if (error instanceof AxiosError) {
           setVisitorsError(error.response?.data.errors[0].detail.message);
@@ -82,6 +93,15 @@ export function EventDetailPage() {
     };
     getVisitors();
   }, [event.id]);
+
+  useEffect(() => {
+    const isSub = async () => {
+      if (user) {
+        setIsEventSubscriber(await EventService.isSubscriber(event.id, user.id));
+      }
+    };
+    isSub();
+  }, [event.id, user]);
 
   const fetchComments = useCallback(async () => {
     setCommentsLoading(true);
@@ -99,9 +119,25 @@ export function EventDetailPage() {
     fetchComments();
   }, [fetchComments]);
 
-  const onEventSubscribe = () => {};
+  const onEventSubscribe = async () => {
+    await EventService.subscribe(event.id);
+    setIsEventSubscriber(true);
+  };
 
-  const onCompanySubscribe = () => {};
+  const onEventUnsubscribe = async () => {
+    await EventService.unsubscribe(event.id);
+    setIsEventSubscriber(false);
+  };
+
+  const onCompanySubscribe = async () => {
+    await CompanyService.subscribe(event.relationships!.company.data.id);
+    setIsCompanySubscriber(true);
+  };
+
+  const onCompanyUnsubscribe = async () => {
+    await CompanyService.unsubscribe(event.relationships!.company.data.id);
+    setIsCompanySubscriber(false);
+  };
 
   const handleBuyClick = (ticket: TicketDto) => {
     if (ticket.available > 0) {
@@ -163,12 +199,24 @@ export function EventDetailPage() {
             <p>{event.attributes.text}</p>
           </div>
           <div className="detail-cta">
-            <button className="primary-btn" onClick={() => onCompanySubscribe()}>
-              Follow organizer
-            </button>
-            <button className="primary-btn" onClick={() => onEventSubscribe()}>
-              Subscribe to event
-            </button>
+            {isCompanySubscriber ? (
+              <button className="primary-btn" onClick={() => onCompanyUnsubscribe()}>
+                Unfollow organizer
+              </button>
+            ) : (
+              <button className="primary-btn" disabled={!isAuthenticated} onClick={() => onCompanySubscribe()}>
+                Follow organizer
+              </button>
+            )}
+            {isEventSubscriber ? (
+              <button className="primary-btn" onClick={() => onEventUnsubscribe()}>
+                Unfollow the event
+              </button>
+            ) : (
+              <button className="primary-btn" disabled={!isAuthenticated} onClick={() => onEventSubscribe()}>
+                Subscribe to event
+              </button>
+            )}
           </div>
         </div>
         <img src={event.attributes.banner_url} alt="Event poster" className="detail-poster" />
@@ -207,7 +255,7 @@ export function EventDetailPage() {
           <ul className="attendee-list">
             {visitorsError.length > 0 && <strong>{visitorsError}</strong>}
             {visitors.map((person) => (
-              <li key={person.created_at}>
+              <li key={person.id}>
                 <strong>{person.username}</strong>
                 <span>{person.visibility}</span>
               </li>

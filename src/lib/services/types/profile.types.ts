@@ -7,3 +7,7 @@ export interface ProfileAttributes {
 }
 
 export type EditableProfileAttributes = Pick<ProfileAttributes, "username" | "visibility">;
+
+export interface ProfileDto extends ProfileAttributes {
+  id: string;
+}

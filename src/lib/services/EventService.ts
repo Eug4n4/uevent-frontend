@@ -20,6 +20,17 @@ export class EventService {
     return response.data;
   }
 
+  static async subscribe(eventId: string) {
+    const response = await api.post<ResponsePayload<ProfileAttributes>>(
+      `${EventService.endpoint}/${eventId}/subscriptions`,
+    );
+    return response.data;
+  }
+
+  static async unsubscribe(eventId: string) {
+    await api.delete<ResponsePayload<ProfileAttributes>>(`${EventService.endpoint}/${eventId}/subscriptions`);
+  }
+
   static async uploadBanner(id: string, file: Blob) {
     return uploadFile(file, `${EventService.endpoint}/${id}/banner`);
   }
@@ -54,6 +65,19 @@ export class EventService {
       `${EventService.endpoint}/${eventId}/visitors`,
     );
     return response.data;
+  }
+
+  static async getSubscribers(eventId: string, query?: EventQueryParams) {
+    const response = await api.get<ResponseArrayPayload<ProfileAttributes>>(
+      formEndpointQueryString(`${EventService.endpoint}/${eventId}/subscriptions`, query),
+    );
+    return response.data;
+  }
+
+  static async isSubscriber(eventId: string, userId: string) {
+    const subs = await EventService.getSubscribers(eventId, { "page[limit]": 99 });
+    const sub = subs.data.find((sub) => sub.id === userId);
+    return sub !== undefined;
   }
 
   static includeCompanies(query?: EventQueryParams) {

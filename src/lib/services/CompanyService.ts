@@ -35,6 +35,14 @@ export class CompanyService {
     return response.data;
   }
 
+  static async subscribe(companyId: string) {
+    await api.post(`${CompanyService.endpoint}/${companyId}/subscriptions`);
+  }
+
+  static async unsubscribe(companyId: string) {
+    await api.delete(`${CompanyService.endpoint}/${companyId}/subscriptions`);
+  }
+
   static async uploadBanner(file: Blob, id: string) {
     return uploadFile(file, `${CompanyService.endpoint}/${id}/banner`);
   }
