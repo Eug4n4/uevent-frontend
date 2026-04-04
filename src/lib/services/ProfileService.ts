@@ -22,12 +22,12 @@ export class ProfileService {
     return await api.post<ResponsePayload<ProfileAttributes>>("profiles/me/avatar", formData);
   }
 
-  static async update(username: string, profileId: string) {
+  static async update(username: string, visibility: boolean, profileId: string) {
     const payload = {
       data: {
         id: profileId,
         type: "profile",
-        attributes: { username },
+        attributes: { username, visibility },
       },
     };
     return await api.patch<ResponsePayload<ProfileAttributes>>("profiles/me", payload);

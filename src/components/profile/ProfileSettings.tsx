@@ -20,6 +20,7 @@ const usernameSchema = z.object({
     .min(3, { error: "Username is too short" })
     .max(30, { error: "Username is too long" })
     .regex(/^[a-zA-Z0-9\-._!\p{L}]+$/u, { error: "Can only contain letters, numbers, and -._!" }),
+  visibility: z.boolean(),
 });
 
 const ProfileSettings = () => {
@@ -33,7 +34,7 @@ const ProfileSettings = () => {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<EditableProfileAttributes>({
-    defaultValues: { username: user?.username },
+    defaultValues: { username: user?.username, visibility: user!.visibility },
     resolver: zodResolver(usernameSchema),
     mode: "all",
   });
@@ -65,7 +66,7 @@ const ProfileSettings = () => {
         };
       }
 
-      const res = await ProfileService.update(data.username, user!.id);
+      const res = await ProfileService.update(data.username, data.visibility, user!.id);
 
       updatedUser = {
         ...updatedUser,
@@ -129,6 +130,10 @@ const ProfileSettings = () => {
           </label>
           <label className="field">
             <span>Member since: {toDateString(user?.created_at!)}</span>
+          </label>
+          <label className="privacy-toggle">
+            <span>Display my name on visitors list:</span>
+            <input type="checkbox" {...register("visibility")} disabled={off} />
           </label>
           <div className="profile-settings-controls">
             <div>

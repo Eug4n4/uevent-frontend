@@ -63,14 +63,13 @@ export class TicketService {
     return response.data;
   }
 
-  static async purchase(ticketId: string, quantity: number, visibility: boolean, promocode?: string) {
+  static async purchase(ticketId: string, quantity: number, promocode?: string) {
     const request = {
       data: {
         type: "purchase",
         attributes: {
           promo_code: promocode,
           quantity,
-          visibility,
         },
       },
     };

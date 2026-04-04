@@ -8,6 +8,7 @@ import type {
   EventQueryParams,
   EventRelationships,
 } from "./types/event.types";
+import type { ProfileAttributes } from "./types/profile.types";
 import type { CompanyResource, RequestPayload, ResponseArrayPayload, ResponsePayload } from "./types/types";
 import { uploadFile } from "./utils";
 
@@ -44,6 +45,13 @@ export class EventService {
     this.includeCompanies(query);
     const response = await api.get<ResponsePayload<EventAttributes, EventRelationships, CompanyResource>>(
       formEndpointQueryString(`${EventService.endpoint}/${eventId}`, query),
+    );
+    return response.data;
+  }
+
+  static async getVisitors(eventId: string) {
+    const response = await api.get<ResponseArrayPayload<ProfileAttributes>>(
+      `${EventService.endpoint}/${eventId}/visitors`,
     );
     return response.data;
   }

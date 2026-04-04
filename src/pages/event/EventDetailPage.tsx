@@ -7,20 +7,15 @@ import { EventService } from "@/lib/services/EventService";
 import { TicketService } from "@/lib/services/TicketService";
 import type { CommentDto } from "@/lib/services/types/comment.types";
 import type { EventDto } from "@/lib/services/types/event.types";
+import type { ProfileAttributes } from "@/lib/services/types/profile.types";
 import type { TicketDto } from "@/lib/services/types/ticket.types";
 import type { IRootState } from "@/state/store";
 import { toDateTimeString } from "@/utils/format.date";
 import Pagination from "@mui/material/Pagination";
+import { AxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLoaderData, useNavigate } from "react-router-dom";
-
-const attendees = [
-  { name: "Alina Kozak", company: "Polar DAO" },
-  { name: "Jon A (hidden)", company: "prefers private" },
-  { name: "Mateo Garcia", company: "Brightbank" },
-  { name: "Iris Y (hidden)", company: "stealth" },
-];
 
 const SIMILAR_EVENTS_LIMIT = 3;
 
@@ -29,6 +24,8 @@ export function EventDetailPage() {
   const [similarEvents, setSimilarEvents] = useState<EventDto[]>();
   const [otherEvents, setOtherEvents] = useState<EventDto[]>();
   const [tickets, setTickets] = useState<TicketDto[]>([]);
+  const [visitors, setVisitors] = useState<ProfileAttributes[]>([]);
+  const [visitorsError, setVisitorsError] = useState("");
   const [comments, setComments] = useState<CommentDto[]>([]);
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [commentText, setCommentText] = useState("");
@@ -70,6 +67,20 @@ export function EventDetailPage() {
       setTickets(tickets.data);
     };
     getTickets();
+  }, [event.id]);
+
+  useEffect(() => {
+    const getVisitors = async () => {
+      try {
+        const visitors = await EventService.getVisitors(event.id);
+        setVisitors(visitors.data.map((v) => v.attributes));
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          setVisitorsError(error.response?.data.errors[0].detail.message);
+        }
+      }
+    };
+    getVisitors();
   }, [event.id]);
 
   const fetchComments = useCallback(async () => {
@@ -193,12 +204,12 @@ export function EventDetailPage() {
 
         <article>
           <h3>Attendee list</h3>
-          <p className="muted">Users can toggle name visibility; we show both states here.</p>
           <ul className="attendee-list">
-            {attendees.map((person) => (
-              <li key={person.name}>
-                <strong>{person.name}</strong>
-                <span>{person.company}</span>
+            {visitorsError.length > 0 && <strong>{visitorsError}</strong>}
+            {visitors.map((person) => (
+              <li key={person.created_at}>
+                <strong>{person.username}</strong>
+                <span>{person.visibility}</span>
               </li>
             ))}
           </ul>
