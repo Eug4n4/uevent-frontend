@@ -2,13 +2,17 @@ import { CompanyCard } from "@/components/company/cards/CompanyCard";
 import { EventCard } from "@/components/event/cards/EventCard";
 import { MapPreview } from "@/components/MapPreview";
 import { usePagePagination } from "@/hooks/pagination";
+import { CommentService } from "@/lib/services/CommentService";
 import { EventService } from "@/lib/services/EventService";
 import { TicketService } from "@/lib/services/TicketService";
+import type { CommentDto } from "@/lib/services/types/comment.types";
 import type { EventDto } from "@/lib/services/types/event.types";
 import type { TicketDto } from "@/lib/services/types/ticket.types";
+import type { IRootState } from "@/state/store";
 import { toDateTimeString } from "@/utils/format.date";
 import Pagination from "@mui/material/Pagination";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useLoaderData, useNavigate } from "react-router-dom";
 
 const attendees = [
@@ -18,12 +22,6 @@ const attendees = [
   { name: "Iris Y (hidden)", company: "stealth" },
 ];
 
-const comments = [
-  { author: "Mock Organizer", role: "Organizer", body: "We will showcase payment + reminder emails here." },
-  { author: "Demo User", role: "Attendee", body: "Toggling “show my name” should reflect instantly." },
-  { author: "Beta Host", role: "Organizer", body: "Stripe responses still mocked, but UI is ready." },
-];
-
 const SIMILAR_EVENTS_LIMIT = 3;
 
 export function EventDetailPage() {
@@ -31,6 +29,11 @@ export function EventDetailPage() {
   const [similarEvents, setSimilarEvents] = useState<EventDto[]>();
   const [otherEvents, setOtherEvents] = useState<EventDto[]>();
   const [tickets, setTickets] = useState<TicketDto[]>([]);
+  const [comments, setComments] = useState<CommentDto[]>([]);
+  const [commentsLoading, setCommentsLoading] = useState(false);
+  const [commentText, setCommentText] = useState("");
+  const [commentFeedback, setCommentFeedback] = useState<string | null>(null);
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const { page, setPage, total, syncFromLinks, buildQuery } = usePagePagination(SIMILAR_EVENTS_LIMIT);
   const {
     page: otherPage,
@@ -39,6 +42,7 @@ export function EventDetailPage() {
     syncFromLinks: syncOtherFromLinks,
     buildQuery: buildOtherQuery,
   } = usePagePagination(SIMILAR_EVENTS_LIMIT);
+  const { user } = useSelector((state: IRootState) => state.auth);
 
   const navigate = useNavigate();
 
@@ -68,6 +72,22 @@ export function EventDetailPage() {
     getTickets();
   }, [event.id]);
 
+  const fetchComments = useCallback(async () => {
+    setCommentsLoading(true);
+    try {
+      const response = await CommentService.list(event.id);
+      setComments(response.data);
+    } catch (error) {
+      console.error("Failed to load comments", error);
+    } finally {
+      setCommentsLoading(false);
+    }
+  }, [event.id]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
+
   const onEventSubscribe = () => {};
 
   const onCompanySubscribe = () => {};
@@ -76,6 +96,42 @@ export function EventDetailPage() {
     if (ticket.available > 0) {
       navigate(`${ticket.id}/checkout`, { state: ticket });
     }
+  };
+
+  const handleCommentSubmit = async () => {
+    if (!commentText.trim()) {
+      setCommentFeedback("Comment cannot be empty");
+      return;
+    }
+    setIsSubmittingComment(true);
+    setCommentFeedback(null);
+    try {
+      await CommentService.create(event.id, { text: commentText.trim() });
+      setCommentText("");
+      await fetchComments();
+      setCommentFeedback("Comment posted");
+    } catch (error) {
+      setCommentFeedback(error instanceof Error ? error.message : "Failed to post comment");
+    } finally {
+      setIsSubmittingComment(false);
+    }
+  };
+
+  const renderComments = (items: CommentDto[]) => {
+    return (
+      <ul className="comment-list">
+        {items.map((comment) => (
+          <li key={comment.id}>
+            <div>
+              <strong>{comment.profile?.username ?? "Member"}</strong>
+              <span>{toDateTimeString(comment.created_at)}</span>
+            </div>
+            <p>{comment.text}</p>
+            {comment.children.length > 0 && renderComments(comment.children)}
+          </li>
+        ))}
+      </ul>
+    );
   };
 
   return (
@@ -150,9 +206,7 @@ export function EventDetailPage() {
 
         <article>
           <h3>Location</h3>
-          <MapPreview
-            position={{ lat: event.attributes.location.latitude, lng: event.attributes.location.longitude }}
-          />
+          <MapPreview query={`${event.attributes.location.latitude},${event.attributes.location.longitude}`} />
         </article>
       </section>
       <section className="detail-organizer">
@@ -195,28 +249,40 @@ export function EventDetailPage() {
         <div>
           <p className="eyebrow">Community comments</p>
           <h3>What people are saying</h3>
-          {/* тут потом пришьём реальный коммент сервис */}
-          <ul className="comment-list">
-            {comments.map((comment) => (
-              <li key={`${comment.author}-${comment.body}`}>
-                <div>
-                  <strong>{comment.author}</strong>
-                  <span>{comment.role}</span>
-                </div>
-                <p>{comment.body}</p>
-              </li>
-            ))}
-          </ul>
+          {commentsLoading ? (
+            <p>Loading comments...</p>
+          ) : comments.length ? (
+            renderComments(comments)
+          ) : (
+            <p>No comments yet.</p>
+          )}
         </div>
-        <form className="comment-form">
-          <label>
-            <span>Leave a note (mock only)</span>
-            <textarea rows={4} placeholder="Add supportive comment for the demo"></textarea>
-          </label>
-          <button type="button" className="primary-btn" disabled>
-            Post comment (disabled in mock)
-          </button>
-        </form>
+        <div className="comment-form">
+          {user ? (
+            <>
+              <label>
+                <span>Leave a note</span>
+                <textarea
+                  rows={4}
+                  placeholder="Share your thoughts"
+                  value={commentText}
+                  onChange={(event) => setCommentText(event.target.value)}
+                ></textarea>
+              </label>
+              <button
+                type="button"
+                className="primary-btn"
+                onClick={handleCommentSubmit}
+                disabled={isSubmittingComment}
+              >
+                {isSubmittingComment ? "Posting..." : "Post comment"}
+              </button>
+              {commentFeedback && <p className="feedback">{commentFeedback}</p>}
+            </>
+          ) : (
+            <p className="muted">Sign in to leave a comment.</p>
+          )}
+        </div>
       </section>
     </main>
   );
