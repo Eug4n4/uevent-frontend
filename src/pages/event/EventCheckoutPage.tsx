@@ -67,6 +67,7 @@ export function EventCheckoutPage() {
   const [clientSecret, setClientSecret] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [promo, setPromo] = useState("");
+  const [discount, setDiscount] = useState(0);
   const [showNameOnLists, setShowNameOnLists] = useState(false);
   const [statusMessage, setStatusMessage] = useState<FeedbackState>();
   const [loading, setLoading] = useState(false);
@@ -86,6 +87,9 @@ export function EventCheckoutPage() {
     setLoading(true);
     try {
       const purchase = await TicketService.purchase(ticket.id, quantity, showNameOnLists, promo);
+      if (promo.length > 0) {
+        setDiscount(purchase.data.attributes.final_price / 100);
+      }
       setClientSecret(purchase.data.attributes.client_secret);
     } catch (error) {
       setStatusMessage({
@@ -128,11 +132,23 @@ export function EventCheckoutPage() {
             </div>
             <div className="total-row">
               <span>Total:</span>
-              <strong>€{total.toFixed(2)}</strong>
+              {discount > 0 ? (
+                <strong>
+                  <del>{toEuros(total)}</del>
+                  {` ${toEuros(discount)}`}
+                </strong>
+              ) : (
+                <strong>{toEuros(total)}</strong>
+              )}
             </div>
           </div>
           <label className="privacy-toggle">
-            <input type="checkbox" checked={showNameOnLists} onChange={() => setShowNameOnLists((value) => !value)} />
+            <input
+              disabled={clientSecret !== ""}
+              type="checkbox"
+              checked={showNameOnLists}
+              onChange={() => setShowNameOnLists((value) => !value)}
+            />
             <span>Display my name on visitors list</span>
           </label>
           {statusMessage && (

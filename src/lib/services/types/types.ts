@@ -11,6 +11,7 @@ import type {
   TicketAttributes,
   TicketQuery,
   TicketRelationships,
+  TransactionAttributes,
   UserTicketAttributes,
   UserTicketRelationships,
 } from "./ticket.types";
@@ -31,6 +32,7 @@ type KnownAttributes =
   | TicketAttributes
   | UserTicketAttributes
   | PromoCodeAttributes
+  | TransactionAttributes
   | PurchaseAttributes
   | NewsAttributes;
 type KnownRelationships =
@@ -42,7 +44,6 @@ type KnownRelationships =
   | UserTicketRelationships
   | NewsRelationships
   | undefined;
-// type KnownIncluded = EventIncluded | undefined;
 type ResourceType =
   | "account"
   | "profile"

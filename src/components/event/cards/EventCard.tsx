@@ -2,36 +2,6 @@ import type { EventDto } from "@/lib/services/types/event.types";
 import { toFullDateString } from "@/utils/format.date";
 import { useNavigate } from "react-router-dom";
 
-export type EventPreview = {
-  id: string;
-  title: string;
-  format: string;
-  theme: string;
-  summary: string;
-  location: string;
-  datetime: string;
-  price: number;
-  currency: string;
-  isFree?: boolean;
-  organizer: {
-    name: string;
-    handle: string;
-    avatar: string;
-  };
-  poster: string;
-  attendees: Array<{
-    name: string;
-    showName: boolean;
-  }>;
-  commentCount: number;
-  subscriberCount: number;
-  similar: string[];
-  mapHint: string;
-  visibility: "everyone" | "attendees";
-  promoCodes: number;
-  isHighlighted?: boolean;
-};
-
 type EventCardProps = {
   event: EventDto;
 };
@@ -43,8 +13,6 @@ export function EventCard({ event }: EventCardProps) {
     <article className={"event-card"} onClick={() => navigate(`/events/${event.id}`)}>
       <div className="badge-row">
         <span>{event.format}</span>
-        {/* <span>{event.theme}</span> */}
-        {/* <span>Visitor list open</span> */}
       </div>
 
       <div className="card-head">
@@ -64,77 +32,17 @@ export function EventCard({ event }: EventCardProps) {
             {toFullDateString(event.start_at)} - {toFullDateString(event.end_at)}
           </strong>
         </div>
-        {/* <div>
-          <span>Where</span>
-          <strong>{event}</strong>
-        </div> */}
-        {/* <div>
-          <span>Price</span>
-          <strong>{formattedPrice}</strong>
-          {event.promoCodes > 0 && <small>{event.promoCodes} promo code(s) active</small>}
-        </div> */}
       </div>
 
       <div className="organizer-stack">
         <div className="organizer">
           <div>
-            <strong>Published by: {event.company?.name}</strong>
+            <strong>Organizer: {event.company?.name}</strong>
             <br />
-            <small>At: {toFullDateString(event.publish_at)}</small>
+            <small>Published at: {toFullDateString(event.publish_at)}</small>
           </div>
         </div>
-        {/* <div className="organizer">
-          <img src={event.organizer.avatar} alt="" width={48} height={48} />
-          <div>
-            <strong>{event.organizer.name}</strong>
-            <span>{event.organizer.handle}</span>
-            <small>{event.subscriberCount}+ organizer followers</small>
-          </div>
-        </div> */}
-
-        {/* <div className="cta-stack">
-          <Link to={`/events/${event.id}`} className="primary-btn ghost link-reset">
-            Subscribe to event
-          </Link>
-          <Link to={`/events/${event.id}`} className="pill-btn link-reset">
-            Follow organizer alerts
-          </Link>
-        </div> */}
       </div>
-
-      {/* <div className="attendees-row">
-        <div className="avatars">
-          {attendees.map((person, index) => (
-            <span key={`${person.name}-${index}`} title={person.name}>
-              {person.showName ? initials(person.name) : VIEWER_PLACEHOLDER}
-            </span>
-          ))}
-        </div>
-        <div className="attendee-info">
-          <strong>{event.attendees.length} attendees already confirmed</strong>
-          <span>Visibility: {event.visibility === "everyone" ? "everyone" : "attendees only"}</span>
-        </div>
-      </div> */}
-
-      {/* <div className="map-preview">
-        <div className="map-marker"></div>
-        <div>
-          <strong>{event.mapHint}</strong>
-          <span>Map placeholder while we wire up the provider.</span>
-        </div>
-      </div> */}
-
-      {/* <div className="similar-section">
-        <div>
-          <span>Comments: {event.commentCount}</span>
-          <span>Promos: {event.promoCodes > 0 ? "active" : "none"}</span>
-        </div>
-        <div className="similar-tags">
-          {event.similar.map((tag) => (
-            <span key={tag}>{tag}</span>
-          ))}
-        </div>
-      </div> */}
     </article>
   );
 }

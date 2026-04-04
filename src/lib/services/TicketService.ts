@@ -1,5 +1,7 @@
 import { formEndpointQueryString } from "@/utils/query";
 import { api } from "../api";
+import { EventService } from "./EventService";
+import type { EventDto } from "./types/event.types";
 import type {
   PromoCodeAttributes,
   PromoCodeCreateAttributes,
@@ -12,9 +14,8 @@ import type {
   TicketDto,
   TicketQuery,
   TicketRelationships,
-  UserTicketAttributes,
-  UserTicketDto,
-  UserTicketRelationships,
+  TransactionAttributes,
+  TransactionQuery,
 } from "./types/ticket.types";
 import type { ResponseArrayPayload, ResponsePayload } from "./types/types";
 
@@ -101,21 +102,26 @@ export class TicketService {
     return TicketService.toPromocodeDto(response.data);
   }
 
-  static async getUserTickets(query?: TicketQuery) {
-    const response = await api.get<ResponseArrayPayload<UserTicketAttributes, UserTicketRelationships>>(
-      formEndpointQueryString("user-tickets", query),
+  static async getUserTickets(query?: TransactionQuery) {
+    const userTransactions = (
+      await api.get<ResponseArrayPayload<TransactionAttributes>>(formEndpointQueryString("transactions", query))
+    ).data;
+    const result = await Promise.all(
+      userTransactions.data.map(async (tr) => {
+        const ticket = await TicketService.getById(tr.attributes.check.ticket_id);
+
+        const event = await EventService.getById(ticket.data.relationships!.ticket.data.id);
+
+        return {
+          attributes: tr.attributes,
+          event: {
+            id: event.data.id,
+            ...event.data.attributes,
+          } as EventDto,
+        };
+      }),
     );
-    const data = response.data;
-    const ticketIds = new Set<string>();
-    for (const ut of data.data) {
-      ticketIds.add(ut.relationships!.ticket.data.id);
-    }
-    const tickets = await Promise.all(Array.from(ticketIds).map((id) => TicketService.getById(id)));
-    const ticketsDto: TicketDto[] = [];
-    for (const many of tickets) {
-      ticketsDto.push({ ...many.data.attributes, event_id: many.data.relationships!.ticket.data.id, id: many.data.id });
-    }
-    return TicketService.toUserTicketDto(ticketsDto, data);
+    return { data: result, links: userTransactions.links };
   }
 
   static toDto(tickets: ResponseArrayPayload<TicketAttributes, TicketRelationships>) {
@@ -124,14 +130,6 @@ export class TicketService {
       result.push({ ...ticket.attributes, event_id: ticket.relationships!.ticket.data.id, id: ticket.id });
     }
     return { data: result, links: tickets.links };
-  }
-
-  static toUserTicketDto(
-    tickets: TicketDto[],
-    userTickets: ResponseArrayPayload<UserTicketAttributes, UserTicketRelationships>,
-  ) {
-    const result: UserTicketDto[] = [];
-    return result;
   }
 
   static toPromocodeDto(promos: ResponseArrayPayload<PromoCodeAttributes, PromoCodeRelationships>) {

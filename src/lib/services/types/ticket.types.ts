@@ -53,6 +53,26 @@ export interface PromoCodeAttributes extends PromoCodeCreateAttributes {
 
 export interface PromoCodeRelationships extends Pick<UserTicketRelationships, "ticket"> {}
 
+export interface TransactionCheck {
+  quantity: number;
+  ticket_id: string;
+  account_id: string;
+  promo_code: string;
+  unit_price: number;
+  final_price: number;
+  ticket_name: string;
+  discount_percent: number;
+}
+
+export interface TransactionAttributes {
+  status: "pending" | "paid" | "returned";
+  description: string;
+  final_price: number;
+  check: TransactionCheck;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface PurchaseAttributes {
   client_secret: string;
   transaction_id: string;
@@ -88,6 +108,22 @@ export interface TicketQuery {
   "page[limit]"?: number;
   "page[offset]"?: number;
   sort?: TicketSortOptions;
+}
+
+export interface TransactionQuery {
+  account_id?: string;
+
+  company_id?: string;
+
+  ticket_id?: string;
+
+  event_id?: string;
+
+  promo_code_id?: string;
+
+  "page[limit]"?: number;
+
+  "page[offset]"?: number;
 }
 
 export interface PromoCodeQuery {
