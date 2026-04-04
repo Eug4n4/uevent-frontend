@@ -206,7 +206,9 @@ export function EventDetailPage() {
 
         <article>
           <h3>Location</h3>
-          <MapPreview query={`${event.attributes.location.latitude},${event.attributes.location.longitude}`} />
+          <MapPreview
+            position={{ lat: event.attributes.location.latitude, lng: event.attributes.location.longitude }}
+          />
         </article>
       </section>
       <section className="detail-organizer">

@@ -38,7 +38,6 @@ export function AuthCard({ mode, onModeChange }: AuthCardProps) {
   } = useForm<AuthDetails>({ resolver, mode: "all" });
 
   const [feedback, setFeedback] = useState<FeedbackState>({ status: "idle" });
-  const [showNameOnLists, setShowNameOnLists] = useState(false);
 
   const onSubmit = async (data: AuthDetails, event?: BaseSyntheticEvent) => {
     event?.preventDefault();
@@ -109,13 +108,6 @@ export function AuthCard({ mode, onModeChange }: AuthCardProps) {
           <PasswordInput placeholder="••••••••••" {...register("password")} />
           <small>{passwordHint}</small>
         </label>
-
-        {mode === "register" && (
-          <label className="privacy-toggle">
-            <input type="checkbox" checked={showNameOnLists} onChange={() => setShowNameOnLists((value) => !value)} />
-            <span>Display my name on attendee lists for networking purposes (you can change this later)</span>
-          </label>
-        )}
 
         {feedback.status !== "idle" && (
           <p className={`feedback ${feedback.status === "error" ? "error" : "success"}`}>{feedback.message}</p>
